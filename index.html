@@ -176,46 +176,175 @@
     cursor: pointer;
   }
   
-  /* ✅ MOBILE FIRST HERO - REDUCED HEIGHT */
-  .hero-banner {
-    background: linear-gradient(rgba(59, 130, 246, 0.8), rgba(30, 64, 175, 0.9)), 
-                url('https://images.unsplash.com/photo-1441986300917-64674bd600d8?w=800&h=600&fit=crop&q=80');
-    background-size: cover;
-    background-position: center;
-    background-attachment: scroll; /* Better performance on mobile */
-    color: white;
-    padding: 3rem 1rem;
-    text-align: center;
-    min-height: 60vh;
+  /* ✅ ENHANCED BANNER SLIDER WITH 16:9 ASPECT RATIO */
+  .hero-banner-slider {
+    position: relative;
+    width: 100%;
+    aspect-ratio: 16 / 9;
+    overflow: hidden;
+    margin-bottom: 2rem;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+    border-radius: 0;
+  }
+
+  .banner-slider-container {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+  }
+
+  .banner-slider-container img {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    opacity: 0;
+    transition: opacity 1s ease-in-out;
+    z-index: 1;
+  }
+
+  .banner-slider-container img.active {
+    opacity: 1;
+  }
+
+  .banner-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(rgba(59, 130, 246, 0.6), rgba(30, 64, 175, 0.7));
     display: flex;
     align-items: center;
     justify-content: center;
+    z-index: 5;
   }
-  
+
   .hero-content {
-    max-width: 100%;
-    width: 100%;
+    text-align: center;
+    color: white;
+    max-width: 800px;
+    padding: 0 2rem;
+    z-index: 6;
+    position: relative;
   }
-  
+
   .hero-content h1 {
-    font-size: 2rem;
+    font-size: 3rem;
     margin-bottom: 1rem;
     font-weight: bold;
-    text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.5);
-    line-height: 1.2;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+    animation: fadeInUp 1s ease-out;
   }
-  
+
   .hero-content p {
-    font-size: 1.1rem;
-    margin-bottom: 1.5rem;
-    opacity: 0.95;
-    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3);
+    font-size: 1.25rem;
+    margin-bottom: 2rem;
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
+    animation: fadeInUp 1s ease-out 0.3s both;
   }
-  
+
   .hero-content .btn {
-    padding: 0.875rem 2rem;
+    animation: fadeInUp 1s ease-out 0.6s both;
+    padding: 1rem 2.5rem;
+    font-size: 1.1rem;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+    transition: all 0.3s ease;
+  }
+
+  .hero-content .btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.4);
+  }
+
+  /* Navigation arrows */
+  .banner-nav {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    background: rgba(0, 0, 0, 0.6);
+    color: white;
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    z-index: 10;
+    font-size: 1.2rem;
+    border: none;
+  }
+
+  .banner-nav:hover {
+    background: rgba(0, 0, 0, 0.8);
+    transform: translateY(-50%) scale(1.1);
+  }
+
+  .banner-nav.prev {
+    left: 20px;
+  }
+
+  .banner-nav.next {
+    right: 20px;
+  }
+
+  /* Banner indicators */
+  .banner-indicators {
+    position: absolute;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    gap: 10px;
+    z-index: 10;
+  }
+
+  .banner-dot {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.5);
+    cursor: pointer;
+    transition: all 0.3s ease;
+    border: none;
+  }
+
+  .banner-dot.active {
+    background: white;
+    transform: scale(1.2);
+  }
+
+  /* Banner caption */
+  .banner-caption {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    background: rgba(0, 0, 0, 0.7);
+    color: white;
+    padding: 8px 16px;
+    border-radius: 20px;
     font-size: 1rem;
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+    font-weight: 600;
+    z-index: 10;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+  }
+
+  /* Animations */
+  @keyframes fadeInUp {
+    from {
+      opacity: 0;
+      transform: translateY(30px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
   }
   
   /* ✅ MOBILE FIRST CONTAINER & SECTIONS */
@@ -1060,9 +1189,61 @@
       transform: translate(-50%, -50%) scale(1);
     }
   }
+
+  @keyframes slideOutCenter {
+    0% {
+      opacity: 1;
+      transform: translate(-50%, -50%) scale(1);
+    }
+    100% {
+      opacity: 0;
+      transform: translate(-50%, -40%) scale(0.8);
+    }
+  }
   
   /* Hidden utility */
   .hidden { display: none !important; }
+  
+  /* ✅ BANNER MOBILE RESPONSIVE */
+  @media (max-width: 768px) {
+    .hero-banner-slider {
+      aspect-ratio: 4 / 3; /* Better for mobile */
+      margin-bottom: 1rem;
+    }
+    
+    .hero-content h1 {
+      font-size: 2rem;
+    }
+    
+    .hero-content p {
+      font-size: 1rem;
+    }
+    
+    .banner-nav {
+      width: 40px;
+      height: 40px;
+      font-size: 1rem;
+    }
+    
+    .banner-nav.prev {
+      left: 10px;
+    }
+    
+    .banner-nav.next {
+      right: 10px;
+    }
+    
+    .banner-caption {
+      top: 10px;
+      right: 10px;
+      font-size: 0.8rem;
+      padding: 6px 12px;
+    }
+    
+    .banner-indicators {
+      bottom: 10px;
+    }
+  }
   
   /* ✅ TABLET BREAKPOINT - 600px+ */
   @media (min-width: 600px) {
@@ -1147,10 +1328,8 @@
       padding: 0 2rem;
     }
     
-    .hero-banner {
-      min-height: 70vh;
-      background-attachment: fixed;
-      padding: 4rem 2rem;
+    .hero-banner-slider {
+      aspect-ratio: 16 / 9;
     }
     
     .hero-content h1 {
@@ -1269,17 +1448,6 @@
   }
   
   /* Animations */
-  @keyframes fadeInUp {
-    from {
-      opacity: 0;
-      transform: translateY(20px);
-    }
-    to {
-      opacity: 1;
-      transform: translateY(0);
-    }
-  }
-  
   @keyframes slideUp {
     from {
       opacity: 0;
@@ -1322,16 +1490,38 @@
     </div>
   </header>
 
-  <!-- ✅ MOBILE OPTIMIZED HERO -->
-  <section class="hero-banner">
-    <div class="hero-content">
-      <h1>Welcome to Crodyto</h1>
-      <p>Discover amazing products at unbeatable prices</p>
-      <button class="btn btn-primary" onclick="document.getElementById('products').scrollIntoView({ behavior: 'smooth' })">
-        <i class="fas fa-shopping-bag"></i>
-        Shop Now
-      </button>
+  <!-- ✅ ENHANCED HERO BANNER WITH AUTO-CHANGING 4 BANNERS -->
+  <section class="hero-banner-slider">
+    <div class="banner-slider-container" id="bannerSlider">
+      <!-- Images will be loaded dynamically -->
     </div>
+    
+    <div class="banner-overlay">
+      <div class="hero-content">
+        <h1>Welcome to Crodyto</h1>
+        <p>Discover amazing products at unbeatable prices</p>
+        <button class="btn btn-primary" onclick="document.getElementById('products').scrollIntoView({ behavior: 'smooth' })">
+          <i class="fas fa-shopping-bag"></i>
+          Shop Now
+        </button>
+      </div>
+    </div>
+    
+    <!-- Navigation arrows -->
+    <button class="banner-nav prev" id="prevBtn">
+      <i class="fas fa-chevron-left"></i>
+    </button>
+    <button class="banner-nav next" id="nextBtn">
+      <i class="fas fa-chevron-right"></i>
+    </button>
+    
+    <!-- Banner indicators -->
+    <div class="banner-indicators" id="bannerIndicators">
+      <!-- Dots will be generated dynamically -->
+    </div>
+    
+    <!-- Banner caption -->
+    <div class="banner-caption" id="bannerCaption">Boys</div>
   </section>
   
   <!-- ✅ MOBILE FIRST PRODUCTS SECTION -->
@@ -1717,6 +1907,102 @@
     let wishlist = JSON.parse(localStorage.getItem('wishlist') || '[]');
     let products = [];
     let isLogin = true;
+
+    // ✅ ENHANCED BANNER SLIDER WITH 4 BANNERS
+    const bannerData = [
+      {
+        src: 'https://images.unsplash.com/photo-1441986300917-64674bd600d8?w=1600&h=900&fit=crop&q=80',
+        alt: 'Boys',
+        category: 'Boys Collection'
+      },
+      {
+        src: 'https://images.unsplash.com/photo-1445205170230-053b83016050?w=1600&h=900&fit=crop&q=80',
+        alt: 'Ladies',
+        category: 'Ladies Fashion'
+      },
+      {
+        src: 'https://images.unsplash.com/photo-1503342217505-b0a15ec3261c?w=1600&h=900&fit=crop&q=80',
+        alt: 'Girls',
+        category: 'Girls Wear'
+      },
+      {
+        src: 'https://t3.ftcdn.net/jpg/06/04/89/06/360_F_604890672_FbnLUt1aDEHB1MscboczTNKMjz8Ix7Rd.jpg',
+        alt: 'New Trends',
+        category: 'New Trends'
+      }
+    ];
+
+    let currentBannerIndex = 0;
+    let bannerInterval = null;
+
+    function createBannerSlider() {
+      const bannerContainer = document.getElementById('bannerSlider');
+      const indicatorsContainer = document.getElementById('bannerIndicators');
+      
+      if (!bannerContainer || !indicatorsContainer) return;
+      
+      // Create banner images
+      bannerData.forEach((banner, index) => {
+        const img = document.createElement('img');
+        img.src = banner.src;
+        img.alt = banner.alt;
+        img.setAttribute('data-category', banner.category);
+        if (index === 0) img.classList.add('active');
+        bannerContainer.appendChild(img);
+      });
+      
+      // Create indicators
+      bannerData.forEach((_, index) => {
+        const dot = document.createElement('button');
+        dot.classList.add('banner-dot');
+        if (index === 0) dot.classList.add('active');
+        dot.addEventListener('click', () => goToBanner(index));
+        indicatorsContainer.appendChild(dot);
+      });
+    }
+
+    function showBanner(index) {
+      const images = document.querySelectorAll('#bannerSlider img');
+      const dots = document.querySelectorAll('.banner-dot');
+      const caption = document.getElementById('bannerCaption');
+      
+      // Remove active class from all
+      images.forEach(img => img.classList.remove('active'));
+      dots.forEach(dot => dot.classList.remove('active'));
+      
+      // Add active class to current
+      if (images[index]) {
+        images[index].classList.add('active');
+        dots[index].classList.add('active');
+        caption.textContent = bannerData[index].category;
+      }
+      
+      currentBannerIndex = index;
+    }
+
+    function nextBanner() {
+      const nextIndex = (currentBannerIndex + 1) % bannerData.length;
+      showBanner(nextIndex);
+    }
+
+    function prevBanner() {
+      const prevIndex = (currentBannerIndex - 1 + bannerData.length) % bannerData.length;
+      showBanner(prevIndex);
+    }
+
+    function goToBanner(index) {
+      showBanner(index);
+      resetBannerInterval();
+    }
+
+    function startBannerSlider() {
+      bannerInterval = setInterval(nextBanner, 5000); // Change every 5 seconds
+    }
+
+    function resetBannerInterval() {
+      clearInterval(bannerInterval);
+      startBannerSlider();
+    }
 
     // Sample Products
     const sampleProducts = [
@@ -2419,6 +2705,7 @@
                     Cancel
                   </button>
                 ` : ''}
+                <button class="btn btn-primary" style="font-size: 0.
                 <button class="btn btn-primary" style="font-size: 0.8rem; padding: 0.5rem 0.75rem;" onclick="toggleOrderDetails('${order.id}')">
                   <i class="fas fa-eye"></i>
                   Details
@@ -2638,7 +2925,6 @@
       
       document.querySelectorAll('.payment-method').forEach(el => el.classList.remove('selected'));
       event.currentTarget.classList.add('selected');
-      event.currentTarget.style.borderColor
       event.currentTarget.style.borderColor = 'var(--primary)';
       
       document.getElementById('upiForm').classList.toggle('show', method === 'upi');
@@ -2915,6 +3201,69 @@
 
     // Initialize App
     document.addEventListener('DOMContentLoaded', () => {
+      createBannerSlider();
+      
+      const prevBtn = document.getElementById('prevBtn');
+      const nextBtn = document.getElementById('nextBtn');
+      
+      if (prevBtn) {
+        prevBtn.addEventListener('click', () => {
+          prevBanner();
+          resetBannerInterval();
+        });
+      }
+      
+      if (nextBtn) {
+        nextBtn.addEventListener('click', () => {
+          nextBanner();
+          resetBannerInterval();
+        });
+      }
+      
+      // Start auto-sliding
+      startBannerSlider();
+      
+      // Pause on hover
+      const bannerSlider = document.querySelector('.hero-banner-slider');
+      if (bannerSlider) {
+        bannerSlider.addEventListener('mouseenter', () => {
+          clearInterval(bannerInterval);
+        });
+        
+        bannerSlider.addEventListener('mouseleave', () => {
+          startBannerSlider();
+        });
+      }
+
+      // Touch support for mobile banner swipe
+      let startX = 0;
+      let endX = 0;
+
+      bannerSlider?.addEventListener('touchstart', (e) => {
+        startX = e.touches[0].clientX;
+      });
+
+      bannerSlider?.addEventListener('touchend', (e) => {
+        endX = e.changedTouches[0].clientX;
+        handleSwipe();
+      });
+
+      function handleSwipe() {
+        const diff = startX - endX;
+        const threshold = 50;
+        
+        if (Math.abs(diff) > threshold) {
+          if (diff > 0) {
+            // Swipe left - next banner
+            nextBanner();
+          } else {
+            // Swipe right - previous banner
+            prevBanner();
+          }
+          resetBannerInterval();
+        }
+      }
+
       loadProducts();
       updateCartUI();
       updateWishlistUI();
