@@ -335,6 +335,116 @@
     letter-spacing: 1px;
   }
 
+  /* Product Image Slider in Modal */
+  .product-image-slider {
+    position: relative;
+    width: 100%;
+    max-width: 400px;
+    margin: 0 auto 1rem;
+    overflow: hidden;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  }
+
+  .product-images-container {
+    position: relative;
+    width: 100%;
+    height: 250px;
+    overflow: hidden;
+  }
+
+  .product-images-container img {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    opacity: 0;
+    transition: opacity 0.5s ease-in-out;
+  }
+
+  .product-images-container img.active {
+    opacity: 1;
+  }
+
+  .product-nav {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    background: rgba(0, 0, 0, 0.6);
+    color: white;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    z-index: 10;
+    font-size: 1rem;
+    border: none;
+  }
+
+  .product-nav:hover {
+    background: rgba(0, 0, 0, 0.8);
+    transform: translateY(-50%) scale(1.1);
+  }
+
+  .product-nav.prev {
+    left: 10px;
+  }
+
+  .product-nav.next {
+    right: 10px;
+  }
+
+  .product-image-indicators {
+    position: absolute;
+    bottom: 10px;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    gap: 8px;
+    z-index: 10;
+  }
+
+  .product-image-dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.5);
+    cursor: pointer;
+    transition: all 0.3s ease;
+    border: none;
+  }
+
+  .product-image-dot.active {
+    background: white;
+    transform: scale(1.2);
+  }
+
+  .product-image-counter {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background: rgba(0, 0, 0, 0.7);
+    color: white;
+    padding: 4px 8px;
+    border-radius: 12px;
+    font-size: 0.8rem;
+    font-weight: 600;
+    z-index: 10;
+  }
+
+  /* Hide navigation if only one image */
+  .product-image-slider.single-image .product-nav,
+  .product-image-slider.single-image .product-image-indicators,
+  .product-image-slider.single-image .product-image-counter {
+    display: none;
+  }
+
   /* Animations */
   @keyframes fadeInUp {
     from {
@@ -930,7 +1040,12 @@
   }
   
   .status-pending { background: #fef3c7; color: #92400e; }
-  .status-completed { background: #d1fae5; color: #065f46; }
+  .status-placed { background: #d1fae5; color: #065f46; }
+  .status-confirmed { background: #d1fae5; color: #065f46; }
+  .status-processing { background: #dbeafe; color: #1e40af; }
+  .status-shipped { background: #e0f2fe; color: #0c4a6e; }
+  .status-out_for_delivery { background: #ede9fe; color: #5b21b7; } /* ✅ Added */
+  .status-delivered { background: #d1fae5; color: #065f46; }
   .status-cancelled { background: #fee2e2; color: #991b1b; }
   
   /* ✅ UPI QR CODE MOBILE OPTIMIZED */
@@ -977,7 +1092,7 @@
     transition: all 0.3s ease;
   }
   
-  /* ✅ ORDER STATUS TRACKING MOBILE */
+  /* ✅ ORDER STATUS TRACKING MOBILE - Updated for 5 Steps */
   .order-status-bar {
     display: flex;
     list-style: none;
@@ -1060,23 +1175,39 @@
     content: '';
     position: absolute;
     top: 8px;
-    left: 8%;
-    right: 8%;
+    left: 6%;
+    right: 6%;
     height: 2px;
     background: #e5e7eb;
     z-index: 0;
+  }
+
+  .order-status-bar.progress-20::before {
+    background: linear-gradient(to right, var(--success) 20%, #e5e7eb 20%);
   }
 
   .order-status-bar.progress-25::before {
     background: linear-gradient(to right, var(--success) 25%, #e5e7eb 25%);
   }
 
+  .order-status-bar.progress-40::before {
+    background: linear-gradient(to right, var(--success) 40%, #e5e7eb 40%);
+  }
+
   .order-status-bar.progress-50::before {
     background: linear-gradient(to right, var(--success) 50%, #e5e7eb 50%);
   }
 
+  .order-status-bar.progress-60::before {
+    background: linear-gradient(to right, var(--success) 60%, #e5e7eb 60%);
+  }
+
   .order-status-bar.progress-75::before {
     background: linear-gradient(to right, var(--success) 75%, #e5e7eb 75%);
+  }
+
+  .order-status-bar.progress-80::before {
+    background: linear-gradient(to right, var(--success) 80%, #e5e7eb 80%);
   }
 
   .order-status-bar.progress-100::before {
@@ -2136,16 +2267,124 @@
       `).join('');
     }
 
-    // Show Product Details - Mobile Optimized
+    // Product Image Slider Functions
+    let currentProductImageIndex = 0;
+    let productImages = [];
+
+    function initProductImageSlider(images) {
+      productImages = images;
+      currentProductImageIndex = 0;
+      
+      // Add touch support for mobile swipe
+      const container = document.getElementById('productImagesContainer');
+      if (container) {
+        let startX = 0;
+        let endX = 0;
+
+        container.addEventListener('touchstart', (e) => {
+          startX = e.touches[0].clientX;
+        });
+
+        container.addEventListener('touchmove', (e) => {
+          e.preventDefault(); // Prevent scrolling
+        });
+
+        container.addEventListener('touchend', (e) => {
+          endX = e.changedTouches[0].clientX;
+          handleProductImageSwipe();
+        });
+
+        function handleProductImageSwipe() {
+          const diff = startX - endX;
+          const threshold = 50;
+          
+          if (Math.abs(diff) > threshold) {
+            if (diff > 0) {
+              // Swipe left - next image
+              nextProductImage();
+            } else {
+              // Swipe right - previous image
+              prevProductImage();
+            }
+          }
+        }
+      }
+    }
+
+    window.nextProductImage = () => {
+      const nextIndex = (currentProductImageIndex + 1) % productImages.length;
+      showProductImage(nextIndex);
+    };
+
+    window.prevProductImage = () => {
+      const prevIndex = (currentProductImageIndex - 1 + productImages.length) % productImages.length;
+      showProductImage(prevIndex);
+    };
+
+    window.goToProductImage = (index) => {
+      showProductImage(index);
+    };
+
+    function showProductImage(index) {
+      const images = document.querySelectorAll('#productImagesContainer img');
+      const dots = document.querySelectorAll('.product-image-dot');
+      const counter = document.getElementById('productImageCounter');
+      
+      // Remove active class from all
+      images.forEach(img => img.classList.remove('active'));
+      dots.forEach(dot => dot.classList.remove('active'));
+      
+      // Add active class to current
+      if (images[index]) {
+        images[index].classList.add('active');
+        dots[index].classList.add('active');
+        counter.textContent = `${index + 1} / ${productImages.length}`;
+      }
+      
+      currentProductImageIndex = index;
+    }
+
+    // Show Product Details with Image Slider - Mobile Optimized
     window.showProductDetails = (productId) => {
       const product = products.find(p => p.id === productId);
       if (!product) return;
       
       const images = product.images || [product.image];
+      const hasMultipleImages = images.length > 1;
       
       const content = `
         <div style="text-align: center;">
-          <img src="${images[0]}" alt="${product.name}" style="width: 100%; max-height: 250px; object-fit: cover; border-radius: 8px; margin-bottom: 1rem;" onerror="this.src='https://images.unsplash.com/photo-1560472354-b33ff0c44a43?w=400&h=300&fit=crop'">
+          <div class="product-image-slider ${!hasMultipleImages ? 'single-image' : ''}" id="productImageSlider">
+            <div class="product-images-container" id="productImagesContainer">
+              ${images.map((img, index) => `
+                <img src="${img}" alt="${product.name}" class="${index === 0 ? 'active' : ''}" 
+                     onerror="this.src='https://images.unsplash.com/photo-1560472354-b33ff0c44a43?w=400&h=300&fit=crop'">
+              `).join('')}
+            </div>
+            
+            ${hasMultipleImages ? `
+              <!-- Navigation arrows -->
+              <button class="product-nav prev" onclick="prevProductImage()">
+                <i class="fas fa-chevron-left"></i>
+              </button>
+              <button class="product-nav next" onclick="nextProductImage()">
+                <i class="fas fa-chevron-right"></i>
+              </button>
+              
+              <!-- Image indicators -->
+              <div class="product-image-indicators" id="productImageIndicators">
+                ${images.map((_, index) => `
+                  <button class="product-image-dot ${index === 0 ? 'active' : ''}" 
+                          onclick="goToProductImage(${index})"></button>
+                `).join('')}
+              </div>
+              
+              <!-- Image counter -->
+              <div class="product-image-counter" id="productImageCounter">
+                1 / ${images.length}
+              </div>
+            ` : ''}
+          </div>
           
           <h2 style="color: var(--primary); margin-bottom: 1rem; font-size: 1.5rem;">${product.name}</h2>
           
@@ -2190,8 +2429,297 @@
       `;
       
       document.getElementById('productDetailsContent').innerHTML = content;
+      
+      // Initialize image slider if multiple images
+      if (hasMultipleImages) {
+        initProductImageSlider(images);
+      }
+      
       showModal('productDetailsModal');
     };
+
+    // ✅ Dynamic Order Status Update System - Updated with Out for Delivery
+    function getOrderStatusProgress(status) {
+      const statusMap = {
+        'pending': { step: 1, class: 'progress-20' },
+        'placed': { step: 1, class: 'progress-20' },
+        'confirmed': { step: 2, class: 'progress-40' },
+        'processing': { step: 2, class: 'progress-40' },
+        'shipped': { step: 3, class: 'progress-60' },
+        'out_for_delivery': { step: 4, class: 'progress-80' }, // ✅ Added
+        'delivered': { step: 5, class: 'progress-100' },        // ✅ Updated step
+        'cancelled': { step: 0, class: 'cancelled' }
+      };
+      
+      return statusMap[status] || { step: 1, class: 'progress-20' };
+    }
+
+    function getStatusSteps(status) {
+      const isCancelled = status === 'cancelled';
+      const progress = getOrderStatusProgress(status);
+      
+      if (isCancelled) {
+        return [
+          { id: 'placed', label: 'Order Placed', icon: '📋', active: true, completed: true },
+          { id: 'cancelled', label: 'Cancelled', icon: '❌', active: true, completed: false, cancelled: true }
+        ];
+      }
+      
+      const steps = [
+        { id: 'placed', label: 'Order Placed', icon: '📋', active: false, completed: false },
+        { id: 'confirmed', label: 'Confirmed', icon: '✅', active: false, completed: false },
+        { id: 'shipped', label: 'Shipped', icon: '📦', active: false, completed: false },
+        { id: 'out_for_delivery', label: 'Out for Delivery', icon: '🚚', active: false, completed: false }, // ✅ Added
+        { id: 'delivered', label: 'Delivered', icon: '🎉', active: false, completed: false }
+      ];
+      
+      // Mark steps as completed or active based on current status
+      steps.forEach((step, index) => {
+        if (index < progress.step) {
+          step.completed = true;
+        } else if (index === progress.step - 1) {
+          step.active = true;
+        }
+      });
+      
+      return steps;
+    }
+
+    function renderDynamicOrderTracking(order) {
+      const steps = getStatusSteps(order.status);
+      const progress = getOrderStatusProgress(order.status);
+      const isCancelled = order.status === 'cancelled';
+      
+      return `
+        <ul class="order-status-bar ${progress.class}">
+          ${steps.map(step => `
+            <li class="status-step ${step.completed ? 'completed' : ''} ${step.active ? 'active' : ''} ${step.cancelled ? 'cancelled' : ''}">
+              <span style="display: block; margin-top: 20px;">${step.icon}</span>
+              <span style="display: block; margin-top: 5px; font-size: 0.75rem;">${step.label}</span>
+            </li>
+          `).join('')}
+        </ul>
+        
+        ${isCancelled ? `
+          <div style="background: #fee2e2; padding: 1rem; border-radius: var(--radius); margin: 1rem 0; border: 1px solid #fecaca;">
+            <h5 style="color: var(--danger); margin-bottom: 0.5rem;">❌ Order Cancelled</h5>
+            <p style="color: #991b1b; font-size: 0.9rem;">This order has been cancelled. Refund will be processed within 3-5 business days.</p>
+          </div>
+        ` : getStatusMessage(order.status)}
+      `;
+    }
+
+    function getStatusMessage(status) {
+      const messages = {
+        'pending': {
+          icon: '⏳',
+          title: 'Order Received',
+          message: 'Your order has been received and is being processed.',
+          color: '#f59e0b'
+        },
+        'placed': {
+          icon: '📋',
+          title: 'Order Placed',
+          message: 'Your order has been successfully placed and confirmed.',
+          color: '#10b981'
+        },
+        'confirmed': {
+          icon: '✅',
+          title: 'Order Confirmed',
+          message: 'Your order has been confirmed and is being prepared for shipment.',
+          color: '#10b981'
+        },
+        'processing': {
+          icon: '⚡',
+          title: 'Processing Order',
+          message: 'Your order is being processed and will be shipped soon.',
+          color: '#3b82f6'
+        },
+        'shipped': {
+          icon: '📦',
+          title: 'Order Shipped',
+          message: 'Your order has been shipped and is on the way to you.',
+          color: '#06b6d4'
+        },
+        'out_for_delivery': {  // ✅ Added
+          icon: '🚚',
+          title: 'Out for Delivery',
+          message: 'Your order is out for delivery and will arrive today.',
+          color: '#8b5cf6'
+        },
+        'delivered': {
+          icon: '🎉',
+          title: 'Order Delivered',
+          message: 'Your order has been successfully delivered. Thank you for shopping with us!',
+          color: '#10b981'
+        }
+      };
+      
+      const statusInfo = messages[status] || messages['pending'];
+      
+      return `
+        <div style="background: rgba(16, 185, 129, 0.1); padding: 1rem; border-radius: var(--radius); margin: 1rem 0; border: 1px solid rgba(16, 185, 129, 0.2);">
+          <div style="display: flex; align-items: center; gap: 0.75rem; margin-bottom: 0.5rem;">
+            <span style="font-size: 1.5rem;">${statusInfo.icon}</span>
+            <h5 style="color: ${statusInfo.color}; margin: 0; font-size: 1rem;">${statusInfo.title}</h5>
+          </div>
+          <p style="color: var(--gray); font-size: 0.9rem; margin: 0; line-height: 1.4;">${statusInfo.message}</p>
+        </div>
+      `;
+    }
+
+    // Update Order Status Function
+    window.updateOrderStatus = async (orderId, newStatus) => {
+      if (!currentUser) return;
+      
+      try {
+        await updateDoc(doc(db, 'orders', orderId), {
+          status: newStatus,
+          lastUpdated: serverTimestamp()
+        });
+        
+        showAlert(`Order status updated to ${newStatus.replace('_', ' ')}`, 'success');
+        loadUserOrders(); // Refresh orders
+        
+      } catch (error) {
+        console.error('Error updating order status:', error);
+        showAlert('Error updating order status', 'error');
+      }
+    };
+
+    // ✅ Add Status Update Buttons - Updated with Out for Delivery
+    function getStatusUpdateButtons(orderId, currentStatus) {
+      const nextStatuses = {
+        'pending': ['confirmed', 'cancelled'],
+        'placed': ['confirmed', 'cancelled'],
+        'confirmed': ['processing', 'cancelled'],
+        'processing': ['shipped', 'cancelled'],
+        'shipped': ['out_for_delivery'],        // ✅ Updated
+        'out_for_delivery': ['delivered'],      // ✅ Added
+        'delivered': [],
+        'cancelled': []
+      };
+      
+      const statusLabels = {
+        'confirmed': '✅ Confirm Order',
+        'processing': '⚡ Start Processing',
+        'shipped': '📦 Mark as Shipped',
+        'out_for_delivery': '🚚 Out for Delivery',  // ✅ Added
+        'delivered': '🎉 Mark as Delivered',
+        'cancelled': '❌ Cancel Order'
+      };
+      
+      const possibleStatuses = nextStatuses[currentStatus] || [];
+      
+      if (possibleStatuses.length === 0) return '';
+      
+      return `
+        <div style="margin-top: 1rem; padding: 1rem; background: #f8fafc; border-radius: var(--radius); border: 1px solid var(--border);">
+          <h6 style="color: var(--primary); margin-bottom: 0.75rem; font-size: 0.9rem;">📝 Update Status:</h6>
+          <div style="display: flex; gap: 0.5rem; flex-wrap: wrap;">
+            ${possibleStatuses.map(status => `
+              <button class="btn ${status === 'cancelled' ? 'btn-outline' : 'btn-primary'}" 
+                      style="font-size: 0.8rem; padding: 0.5rem 0.75rem; ${status === 'cancelled' ? 'color: var(--danger); border-color: var(--danger);' : ''}"
+                      onclick="updateOrderStatus('${orderId}', '${status}')">
+                ${statusLabels[status]}
+              </button>
+            `).join('')}
+          </div>
+        </div>
+      `;
+    }
+
+    // Updated Render Orders Function
+    function renderOrdersWithTracking(orders) {
+      const container = document.getElementById('ordersContainer');
+      
+      container.innerHTML = `
+        <div style="margin-bottom: 1rem;">
+          <p style="color: var(--gray); font-size: 0.9rem;">
+            ${orders.length} order${orders.length > 1 ? 's' : ''} found
+          </p>
+        </div>
+        ${orders.map((order, index) => {
+          return `
+            <div class="order-card" style="animation: slideUp 0.3s ease ${index * 0.1}s both;" data-order-id="${order.id}">
+              <div class="order-header">
+                <div style="display: flex; align-items: center; gap: 0.5rem;">
+                  <i class="fas fa-receipt" style="color: var(--primary);"></i>
+                  <div class="order-id">Order #${order.id.slice(-8).toUpperCase()}</div>
+                </div>
+                <div class="order-status status-${order.status || 'pending'}">${(order.status || 'pending').replace('_', ' ').toUpperCase()}</div>
+              </div>
+              
+              <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin: 1rem 0; font-size: 0.9rem;">
+                <div>
+                  <strong>📅 Date:</strong><br>
+                  <span style="color: var(--gray);">${order.createdAt?.toDate?.()?.toLocaleDateString() || 'N/A'}</span>
+                </div>
+                <div>
+                  <strong>💰 Total:</strong><br>
+                  <span style="color: var(--success); font-weight: 600;">₹${order.total?.toLocaleString() || '0'}</span>
+                </div>
+                <div>
+                  <strong>📦 Items:</strong><br>
+                  <span style="color: var(--gray);">${order.items?.length || 0} item${(order.items?.length || 0) > 1 ? 's' : ''}</span>
+                </div>
+                <div>
+                  <strong>💳 Payment:</strong><br>
+                  <span style="color: var(--gray); text-transform: uppercase; font-size: 0.8rem;">${order.paymentMethod || 'N/A'}</span>
+                </div>
+              </div>
+              
+              <div style="display: flex; gap: 0.5rem; flex-wrap: wrap; padding-top: 1rem; border-top: 1px solid var(--border);">
+                <button class="btn btn-ghost" onclick="copyOrderId('${order.id}')" style="font-size: 0.8rem; padding: 0.5rem 0.75rem;">
+                  <i class="fas fa-copy"></i>
+                  Copy ID
+                </button>
+                ${order.status !== 'cancelled' && order.status !== 'delivered' && (order.status === 'pending' || order.status === 'placed') ? `
+                  <button class="btn btn-outline" style="color: var(--danger); border-color: var(--danger); font-size: 0.8rem; padding: 0.5rem 0.75rem;" onclick="cancelOrder('${order.id}')">
+                    <i class="fas fa-times"></i>
+                    Cancel
+                  </button>
+                ` : ''}
+                <button class="btn btn-primary" style="font-size: 0.8rem; padding: 0.5rem 0.75rem;" onclick="toggleOrderDetails('${order.id}')">
+                  <i class="fas fa-eye"></i>
+                  Details
+                </button>
+              </div>
+              
+                            <div class="order-details" id="details-${order.id}">
+                <h4 style="color: var(--primary); margin-bottom: 1rem; font-size: 1rem;">📋 Order Tracking</h4>
+                
+                ${renderDynamicOrderTracking(order)}
+                
+                ${order.items?.length ? `
+                  <div style="background: white; padding: 1rem; border-radius: var(--radius); margin: 1rem 0; border: 1px solid var(--border);">
+                    <h5 style="color: var(--primary); margin-bottom: 1rem; font-size: 0.9rem;">🛍️ Order Items</h5>
+                    ${order.items.map(item => `
+                      <div style="display: flex; align-items: center; padding: 0.5rem 0; border-bottom: 1px solid var(--border);">
+                        <img src="${item.image}" alt="${item.name}" style="width: 40px; height: 40px; border-radius: 4px; margin-right: 0.75rem; object-fit: cover;">
+                        <div style="flex: 1; min-width: 0;">
+                          <div style="font-weight: 600; font-size: 0.85rem; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">${item.name}</div>
+                          <div style="color: var(--gray); font-size: 0.8rem;">₹${item.price?.toLocaleString()} × ${item.quantity}</div>
+                        </div>
+                      </div>
+                    `).join('')}
+                  </div>
+                ` : ''}
+                
+                <div style="background: white; padding: 1rem; border-radius: var(--radius); border: 1px solid var(--border);">
+                  <h5 style="color: var(--primary); margin-bottom: 1rem; font-size: 0.9rem;">🚚 Shipping Info</h5>
+                  <div style="font-size: 0.85rem;"><strong>Address:</strong> ${order.address || 'N/A'}</div>
+                  <div style="font-size: 0.85rem;"><strong>Phone:</strong> ${order.phone || 'N/A'}</div>
+                  <div style="font-size: 0.85rem;"><strong>Payment:</strong> ${order.paymentMethod?.toUpperCase() || 'N/A'}</div>
+                </div>
+                
+                ${getStatusUpdateButtons(order.id, order.status)}
+              </div>
+            </div>
+          `;
+        }).join('')}
+      `;
+    }
 
     // Update wishlist button in modal
     window.updateModalWishlistButton = (productId) => {
@@ -2650,134 +3178,6 @@
           </div>
         `;
       }
-    }
-
-    // Render Orders - Mobile Optimized
-    function renderOrdersWithTracking(orders) {
-      const container = document.getElementById('ordersContainer');
-      
-      container.innerHTML = `
-        <div style="margin-bottom: 1rem;">
-          <p style="color: var(--gray); font-size: 0.9rem;">
-            ${orders.length} order${orders.length > 1 ? 's' : ''} found
-          </p>
-        </div>
-        ${orders.map((order, index) => {
-          const isCancelled = order.status === 'cancelled';
-          
-          return `
-            <div class="order-card" style="animation: slideUp 0.3s ease ${index * 0.1}s both;" data-order-id="${order.id}">
-              <div class="order-header">
-                <div style="display: flex; align-items: center; gap: 0.5rem;">
-                  <i class="fas fa-receipt" style="color: var(--primary);"></i>
-                  <div class="order-id">Order #${order.id.slice(-8).toUpperCase()}</div>
-                </div>
-                <div class="order-status status-${order.status || 'pending'}">${order.status || 'pending'}</div>
-              </div>
-              
-              <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin: 1rem 0; font-size: 0.9rem;">
-                <div>
-                  <strong>📅 Date:</strong><br>
-                  <span style="color: var(--gray);">${order.createdAt?.toDate?.()?.toLocaleDateString() || 'N/A'}</span>
-                </div>
-                <div>
-                  <strong>💰 Total:</strong><br>
-                  <span style="color: var(--success); font-weight: 600;">₹${order.total?.toLocaleString() || '0'}</span>
-                </div>
-                <div>
-                  <strong>📦 Items:</strong><br>
-                  <span style="color: var(--gray);">${order.items?.length || 0} item${(order.items?.length || 0) > 1 ? 's' : ''}</span>
-                </div>
-                <div>
-                  <strong>💳 Payment:</strong><br>
-                  <span style="color: var(--gray); text-transform: uppercase; font-size: 0.8rem;">${order.paymentMethod || 'N/A'}</span>
-                </div>
-              </div>
-              
-              <div style="display: flex; gap: 0.5rem; flex-wrap: wrap; padding-top: 1rem; border-top: 1px solid var(--border);">
-                <button class="btn btn-ghost" onclick="copyOrderId('${order.id}')" style="font-size: 0.8rem; padding: 0.5rem 0.75rem;">
-                  <i class="fas fa-copy"></i>
-                  Copy ID
-                </button>
-                ${!isCancelled && (order.status === 'pending' || order.status === 'placed') ? `
-                  <button class="btn btn-outline" style="color: var(--danger); border-color: var(--danger); font-size: 0.8rem; padding: 0.5rem 0.75rem;" onclick="cancelOrder('${order.id}')">
-                    <i class="fas fa-times"></i>
-                    Cancel
-                  </button>
-                ` : ''}
-                <button class="btn btn-primary" style="font-size: 0.
-                <button class="btn btn-primary" style="font-size: 0.8rem; padding: 0.5rem 0.75rem;" onclick="toggleOrderDetails('${order.id}')">
-                  <i class="fas fa-eye"></i>
-                  Details
-                </button>
-              </div>
-              
-              <div class="order-details" id="details-${order.id}">
-                <h4 style="color: var(--primary); margin-bottom: 1rem; font-size: 1rem;">📋 Order Tracking</h4>
-                
-                ${isCancelled ? `
-                  <ul class="order-status-bar cancelled">
-                    <li class="status-step completed">
-                      <span style="display: block; margin-top: 20px;">📋</span>
-                      <span style="display: block; margin-top: 5px; font-size: 0.75rem;">Order Placed</span>
-                    </li>
-                    <li class="status-step cancelled">
-                      <span style="display: block; margin-top: 20px;">❌</span>
-                      <span style="display: block; margin-top: 5px; font-size: 0.75rem;">Cancelled</span>
-                    </li>
-                  </ul>
-                  
-                  <div style="background: #fee2e2; padding: 1rem; border-radius: var(--radius); margin: 1rem 0; border: 1px solid #fecaca;">
-                    <h5 style="color: var(--danger); margin-bottom: 0.5rem;">❌ Order Cancelled</h5>
-                    <p style="color: #991b1b; font-size: 0.9rem;">This order has been cancelled. Refund will be processed within 3-5 business days.</p>
-                  </div>
-                ` : `
-                  <ul class="order-status-bar progress-25">
-                    <li class="status-step completed">
-                      <span style="display: block; margin-top: 20px;">📋</span>
-                      <span style="display: block; margin-top: 5px; font-size: 0.75rem;">Placed</span>
-                    </li>
-                    <li class="status-step">
-                      <span style="display: block; margin-top: 20px;">📦</span>
-                      <span style="display: block; margin-top: 5px; font-size: 0.75rem;">Shipped</span>
-                    </li>
-                    <li class="status-step">
-                      <span style="display: block; margin-top: 20px;">🚚</span>
-                      <span style="display: block; margin-top: 5px; font-size: 0.75rem;">Delivery</span>
-                    </li>
-                    <li class="status-step">
-                      <span style="display: block; margin-top: 20px;">✅</span>
-                      <span style="display: block; margin-top: 5px; font-size: 0.75rem;">Delivered</span>
-                    </li>
-                  </ul>
-                `}
-                
-                ${order.items?.length ? `
-                  <div style="background: white; padding: 1rem; border-radius: var(--radius); margin: 1rem 0; border: 1px solid var(--border);">
-                    <h5 style="color: var(--primary); margin-bottom: 1rem; font-size: 0.9rem;">🛍️ Order Items</h5>
-                    ${order.items.map(item => `
-                      <div style="display: flex; align-items: center; padding: 0.5rem 0; border-bottom: 1px solid var(--border);">
-                        <img src="${item.image}" alt="${item.name}" style="width: 40px; height: 40px; border-radius: 4px; margin-right: 0.75rem; object-fit: cover;">
-                        <div style="flex: 1; min-width: 0;">
-                          <div style="font-weight: 600; font-size: 0.85rem; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">${item.name}</div>
-                          <div style="color: var(--gray); font-size: 0.8rem;">₹${item.price?.toLocaleString()} × ${item.quantity}</div>
-                        </div>
-                      </div>
-                    `).join('')}
-                  </div>
-                ` : ''}
-                
-                <div style="background: white; padding: 1rem; border-radius: var(--radius); border: 1px solid var(--border);">
-                  <h5 style="color: var(--primary); margin-bottom: 1rem; font-size: 0.9rem;">🚚 Shipping Info</h5>
-                  <div style="font-size: 0.85rem;"><strong>Address:</strong> ${order.address || 'N/A'}</div>
-                  <div style="font-size: 0.85rem;"><strong>Phone:</strong> ${order.phone || 'N/A'}</div>
-                  <div style="font-size: 0.85rem;"><strong>Payment:</strong> ${order.paymentMethod?.toUpperCase() || 'N/A'}</div>
-                </div>
-              </div>
-            </div>
-          `;
-        }).join('')}
-      `;
     }
 
     // Toggle Order Details
@@ -3311,6 +3711,10 @@
     window.toggleOrderDetails = toggleOrderDetails;
     window.copyOrderId = copyOrderId;
     window.cancelOrder = cancelOrder;
+    window.nextProductImage = nextProductImage;
+    window.prevProductImage = prevProductImage;
+    window.goToProductImage = goToProductImage;
+    window.updateOrderStatus = updateOrderStatus;
 
   </script>
 </body>
