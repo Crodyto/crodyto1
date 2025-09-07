@@ -5,6 +5,17 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Crodyto - Mobile First E-commerce</title>
 
+<!-- Android PWA Support -->
+<meta name="theme-color" content="#3b82f6">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<link rel="manifest" href="data:application/json;base64,eyJuYW1lIjoiQ3JvZHl0byAtIE1vYmlsZSBFLWNvbW1lcmNlIiwic2hvcnRfbmFtZSI6IkNyb2R5dG8iLCJkZXNjcmlwdGlvbiI6Ik1vYmlsZSBGaXJzdCBFLWNvbW1lcmNlIFBsYXRmb3JtIiwic3RhcnRfdXJsIjoiLyIsImRpc3BsYXkiOiJzdGFuZGFsb25lIiwib3JpZW50YXRpb24iOiJwb3J0cmFpdC1wcmltYXJ5IiwidGhlbWVfY29sb3IiOiIjM2I4MmY2IiwiYmFja2dyb3VuZF9jb2xvciI6IiNmOGZhZmMiLCJpY29ucyI6W3sic3JjIjoiZGF0YTppbWFnZS9wbmc7YmFzZTY0LGlWQk9SdzBLR2dvQUFBQU5TVWhFVWdBQUFNQUFBQURBQ0FZQUFBQlMzR3dIQUFBQUNYQklXWE1BQUFzVEFBQUxFd0VBbXB3WUFBQUZaa2xFUVZSNG5PMWQzVzNiTUJTQVVTZkksInNpemVzIjoiMTkyeDE5MiIsInR5cGUiOiJpbWFnZS9wbmcifSx7InNyYyI6ImRhdGE6aW1hZ2UvcG5nO2Jhc2U2NCxpVkJPUncwS0dnb0FBQUFOUVVIQ1VnQUFBZ0FBQUFJQUNBWUFBQUQ=",InNpemVzIjoiNTEyeDUxMiIsInR5cGUiOiJpbWFnZS9wbmcifV0sImNhdGVnb3JpZXMiOlsic2hvcHBpbmciLCJidXNpbmVzcyJdLCJsYW5nIjoiZW4tVVMifQ==">
+
+<!-- Android Icons -->
+<link rel="icon" sizes="192x192" href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAMAAAADACAYAAABS3GwHAAAFZklEQVR4nO3d3W3bMBSAUSfI">
+<link rel="icon" sizes="512x512" href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAgAAAAIACAYAAAD0eNT6AAAF">
+
 <!-- Confetti Library -->
 <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.2/dist/confetti.browser.min.js"></script>
 
@@ -30,6 +41,58 @@
     --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
     --radius: 8px;
   }
+
+  /* ✅ ANDROID SPECIFIC OPTIMIZATIONS */
+  .android-device .btn {
+    -webkit-tap-highlight-color: rgba(0,0,0,0.1);
+    touch-action: manipulation;
+  }
+
+  /* Android Chrome address bar optimization */
+  html {
+    height: 100vh;
+    height: -webkit-fill-available;
+  }
+
+  body {
+    min-height: 100vh;
+    min-height: -webkit-fill-available;
+  }
+
+  /* Android vibration effect */
+  .btn-vibrate {
+    animation: androidVibrate 0.1s;
+  }
+
+  @keyframes androidVibrate {
+    0%, 100% { transform: translateX(0); }
+    25% { transform: translateX(-2px); }
+    75% { transform: translateX(2px); }
+  }
+
+  /* Better Android scrolling */
+  * {
+    -webkit-overflow-scrolling: touch;
+    scroll-behavior: smooth;
+  }
+
+  /* Android notification style */
+  .android-notification {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    background: linear-gradient(135deg, #3b82f6, #06b6d4);
+    color: white;
+    padding: 1rem;
+    z-index: 10000;
+    transform: translateY(-100%);
+    transition: transform 0.3s ease;
+  }
+
+  .android-notification.show {
+    transform: translateY(0);
+  }
   
   * {
     margin: 0;
@@ -54,6 +117,7 @@
     top: 0;
     z-index: 100;
     padding: 0.75rem 0;
+    padding-top: max(0.75rem, env(safe-area-inset-top));
   }
   
   .nav-container {
@@ -101,6 +165,7 @@
   .search-bar input:focus {
     border-color: var(--primary);
     box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+    font-size: 16px; /* Prevents zoom on Android */
   }
   
   .btn {
@@ -116,7 +181,10 @@
     gap: 0.375rem;
     transition: all 0.3s ease;
     min-height: 44px;
+    min-width: 44px;
     white-space: nowrap;
+    -webkit-user-select: none;
+    user-select: none;
   }
   
   .btn-primary {
@@ -259,7 +327,7 @@
     top: 50%;
     transform: translateY(-50%);
     background: rgba(0, 0, 0, 0.6);
-    color: rgb(162, 109, 109);
+    color: white;
     width: 50px;
     height: 50px;
     border-radius: 50%;
@@ -608,9 +676,12 @@
     width: 100%;
     max-width: 100vw;
     max-height: 85vh;
+    max-height: -webkit-fill-available;
     overflow-y: auto;
     transform: translateY(100%);
     transition: transform 0.3s ease;
+    position: fixed;
+    bottom: 0;
   }
   
   .modal-backdrop.show .modal {
@@ -1033,6 +1104,7 @@
   .profile-form-input:focus {
     border-color: var(--primary);
     box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+    font-size: 16px; /* Prevents zoom on Android */
   }
   
   .tab-content {
@@ -1435,6 +1507,8 @@
       max-width: 600px;
       max-height: 80vh;
       transform: scale(0.9);
+      position: relative;
+      bottom: auto;
     }
     
     .modal-backdrop.show .modal {
@@ -1920,6 +1994,182 @@
     const db = getFirestore(app);
     const auth = getAuth(app);
 
+    // ✅ ANDROID SPECIFIC FEATURES
+    class AndroidOptimizer {
+      constructor() {
+        this.isAndroid = /Android/i.test(navigator.userAgent);
+        this.wakeLock = null;
+        this.init();
+      }
+
+      init() {
+        if (this.isAndroid) {
+          document.body.classList.add('android-device');
+          this.setupAndroidFeatures();
+          this.setupBackButton();
+          this.setupVibration();
+          this.setupNotifications();
+          this.registerServiceWorker();
+        }
+      }
+
+      // Android Back Button Support
+      setupBackButton() {
+        window.addEventListener('popstate', (e) => {
+          const openModal = document.querySelector('.modal-backdrop.show');
+          const openCart = document.querySelector('.cart-drawer.show');
+          
+          if (openModal) {
+            openModal.classList.remove('show');
+            document.body.style.overflow = '';
+            history.pushState(null, null, window.location.href);
+          } else if (openCart) {
+            openCart.classList.remove('show');
+            history.pushState(null, null, window.location.href);
+          }
+        });
+        
+        // Push initial state
+        history.pushState(null, null, window.location.href);
+      }
+
+      // Vibration Support
+      setupVibration() {
+        if ('vibrate' in navigator) {
+          // Add vibration to all buttons
+          document.addEventListener('click', (e) => {
+            if (e.target.classList.contains('btn') || e.target.closest('.btn')) {
+              navigator.vibrate(50);
+              const btn = e.target.classList.contains('btn') ? e.target : e.target.closest('.btn');
+              btn.classList.add('btn-vibrate');
+              setTimeout(() => {
+                btn.classList.remove('btn-vibrate');
+              }, 100);
+            }
+          });
+        }
+      }
+
+      // Android Notifications
+      setupNotifications() {
+        if ('Notification' in window && 'serviceWorker' in navigator) {
+          // Request permission after user interaction
+          let permissionRequested = false;
+          document.addEventListener('click', () => {
+            if (Notification.permission === 'default' && !permissionRequested) {
+              permissionRequested = true;
+              Notification.requestPermission().then(permission => {
+                if (permission === 'granted') {
+                  this.showAndroidNotification('Welcome to Crodyto!', 'Notifications enabled for order updates');
+                }
+              });
+            }
+          }, { once: true });
+        }
+      }
+
+      // Register Service Worker
+      async registerServiceWorker() {
+        if ('serviceWorker' in navigator) {
+          try {
+            const registration = await navigator.serviceWorker.register('data:text/javascript;base64,c2VsZi5hZGRFdmVudExpc3RlbmVyKCdpbnN0YWxsJywgZXZlbnQgPT4gew0KICBjb25zb2xlLmxvZygnU2VydmljZSBXb3JrZXIgaW5zdGFsbGVkJyk7DQp9KTsNCg0Kc2VsZi5hZGRFdmVudExpc3RlbmVyKCdmZXRjaCcsIGV2ZW50ID0+IHsNCiAgLy8gSW50ZXJjZXB0IG5ldHdvcmsgcmVxdWVzdHMgaWYgbmVlZGVkDQp9KTs=');
+            console.log('Service Worker registered:', registration);
+          } catch (error) {
+            console.log('Service Worker registration failed:', error);
+          }
+        }
+      }
+
+      // Show Android-style notification
+      showAndroidNotification(title, body) {
+        if (Notification.permission === 'granted') {
+          const notification = new Notification(title, {
+            body: body,
+            icon: 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAMAAAADACAYAAABS3GwH',
+            badge: 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEgAAABICAYAAABV7bNH',
+            vibrate: [200, 100, 200],
+            tag: 'crodyto-notification'
+          });
+
+          notification.onclick = () => {
+            window.focus();
+            notification.close();
+          };
+
+          setTimeout(() => {
+            notification.close();
+          }, 5000);
+        }
+      }
+
+      // Enhanced UPI for Android
+      openUPIApp(upiUrl) {
+        if (this.isAndroid) {
+          // Try specific UPI apps
+          const upiApps = [
+            'intent://pay?pa=dipamg13-1@oksbi#Intent;scheme=upi;package=net.one97.paytm;end',
+            'intent://pay?pa=dipamg13-1@oksbi#Intent;scheme=upi;package=com.phonepe.app;end',
+            'intent://pay?pa=dipamg13-1@oksbi#Intent;scheme=upi;package=com.google.android.apps.nbu.paisa.user;end'
+          ];
+          
+          let appOpened = false;
+          upiApps.forEach((appIntent, index) => {
+            setTimeout(() => {
+              if (!appOpened) {
+                try {
+                  window.location.href = appIntent;
+                  appOpened = true;
+                } catch (e) {
+                  if (index === upiApps.length - 1) {
+                    // Fallback to web UPI
+                    window.location.href = upiUrl;
+                  }
+                }
+              }
+            }, index * 500);
+          });
+        } else {
+          window.location.href = upiUrl;
+        }
+      }
+
+      setupAndroidFeatures() {
+        // Android status bar color
+        const metaThemeColor = document.querySelector('meta[name="theme-color"]');
+        if (metaThemeColor) {
+          metaThemeColor.content = '#3b82f6';
+        }
+
+        // Keep screen on during checkout
+        this.setupWakeLock();
+
+        // Better touch handling
+        document.addEventListener('touchstart', function(e) {
+          // Add visual feedback for touch
+        }, { passive: true });
+      }
+
+      async setupWakeLock() {
+        if ('wakeLock' in navigator) {
+          try {
+            // Keep screen on during checkout
+            document.addEventListener('checkout-start', async () => {
+              this.wakeLock = await navigator.wakeLock.request('screen');
+            });
+            
+            document.addEventListener('checkout-end', () => {
+              if (this.wakeLock) {
+                this.wakeLock.release();
+                this.wakeLock = null;
+              }
+            });
+          } catch (err) {
+            console.log('Wake lock failed:', err);
+          }
+        }
+      }
+    }
+
     // Global State
     let currentUser = null;
     let cart = JSON.parse(localStorage.getItem('cart') || '[]');
@@ -1932,7 +2182,36 @@
     let selectedRating = 0;
     let currentProductForRating = null;
 
-    // ✅ ENHANCED UPI Payment System with Automatic Verification
+    // Initialize Android Optimizer
+    const androidOptimizer = new AndroidOptimizer();
+
+    // Enhanced UPI Handler for Android
+    window.openAndroidUPI = (upiUrl) => {
+      androidOptimizer.openUPIApp(upiUrl);
+    };
+
+    // Enhanced alert for Android
+    function showAndroidAlert(message, type = 'success') {
+      // Vibrate on alerts
+      if (navigator.vibrate && androidOptimizer.isAndroid) {
+        const vibrationPattern = {
+          success: [100],
+          error: [100, 50, 100],
+          warning: [50, 50, 50]
+        };
+        navigator.vibrate(vibrationPattern[type] || [100]);
+      }
+
+      // Show notification if possible
+      if (androidOptimizer.isAndroid && Notification.permission === 'granted') {
+        androidOptimizer.showAndroidNotification('Crodyto', message);
+      }
+
+      // Show regular alert
+      showAlert(message, type);
+    }
+
+    // Enhanced UPI Payment System with Automatic Verification
     class UPIPaymentHandler {
       constructor() {
         this.pendingPayments = new Map();
@@ -1940,12 +2219,10 @@
         this.paymentCheckInterval = 5000; // Check every 5 seconds
       }
 
-      // ✅ Generate unique transaction ID
       generateTransactionId() {
         return 'TXN_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
       }
 
-      // ✅ Create UPI payment with monitoring
       async initiateUPIPayment(amount, orderData) {
         const transactionId = this.generateTransactionId();
         const upiId = 'dipamg13-1@oksbi';
@@ -1988,7 +2265,6 @@
         }
       }
 
-      // ✅ Generate enhanced QR code with transaction info
       generateUPIQRCode(upiUrl, amount, upiId, merchantName, transactionId) {
         const qrContainer = document.getElementById('qrCode');
         qrContainer.innerHTML = '';
@@ -2027,8 +2303,8 @@
             `;
             qrContainer.appendChild(paymentInfo);
             
-            // Add manual verification button
-            this.addManualVerificationButton(transactionId);
+            // Add manual verification button and Android UPI button
+            this.addManualVerificationButton(transactionId, upiUrl);
             
           }, 100);
           
@@ -2037,12 +2313,17 @@
         }
       }
 
-      // ✅ Add manual verification option
-      addManualVerificationButton(transactionId) {
+      addManualVerificationButton(transactionId, upiUrl) {
         const qrContainer = document.getElementById('qrCode');
         const buttonContainer = document.createElement('div');
         buttonContainer.innerHTML = `
           <div style="margin-top: 1rem; text-align: center;">
+            <button 
+              class="btn btn-primary" 
+              onclick="openAndroidUPI('${upiUrl}')"
+              style="width: 100%; margin-bottom: 0.75rem; background: linear-gradient(135deg, #059669, #10b981);">
+              📱 Pay with UPI Apps
+            </button>
             <button 
               class="btn btn-primary" 
               onclick="upiHandler.manualVerification('${transactionId}')"
@@ -2057,7 +2338,6 @@
         qrContainer.appendChild(buttonContainer);
       }
 
-      // ✅ Start monitoring payment status
       startPaymentMonitoring(transactionId, paymentRecord) {
         const statusElement = document.getElementById(`paymentStatus_${transactionId}`);
         let checkCount = 0;
@@ -2107,10 +2387,9 @@
         });
       }
 
-      // ✅ Check payment status (multiple methods)
       async checkPaymentStatus(transactionId) {
         try {
-          // Method 1: Check Firebase for manual confirmation
+          // Check Firebase for manual confirmation
           const paymentQuery = query(
             collection(db, 'pendingPayments'),
             where('transactionId', '==', transactionId)
@@ -2126,10 +2405,6 @@
             }
           }
 
-          // Method 2: Auto-detection via payment APIs (if available)
-          // This would require integration with bank APIs or payment gateway
-          // For now, we'll use manual verification
-          
           return { confirmed: false };
           
         } catch (error) {
@@ -2138,7 +2413,6 @@
         }
       }
 
-      // ✅ Handle payment success
       async handlePaymentSuccess(transactionId, paymentRecord, paymentStatus) {
         console.log('🎉 Payment confirmed:', transactionId);
         
@@ -2185,8 +2459,13 @@
           closeModal('checkoutModal');
           showOrderPlacedNotification(docRef.id);
           
+          // Android notification
+          if (androidOptimizer.isAndroid) {
+            androidOptimizer.showAndroidNotification('Order Placed!', `Order #${docRef.id.slice(-8).toUpperCase()} has been placed successfully.`);
+          }
+          
           setTimeout(() => {
-            showAlert('🎉 Payment verified! Order placed successfully.', 'success');
+            showAndroidAlert('🎉 Payment verified! Order placed successfully.', 'success');
           }, 1000);
 
           // Cleanup
@@ -2194,11 +2473,10 @@
           
         } catch (error) {
           console.error('Error processing confirmed payment:', error);
-          showAlert('Payment confirmed but order creation failed. Please contact support.', 'error');
+          showAndroidAlert('Payment confirmed but order creation failed. Please contact support.', 'error');
         }
       }
 
-      // ✅ Handle payment timeout
       async handlePaymentTimeout(transactionId, paymentRecord) {
         console.log('⏰ Payment timeout:', transactionId);
         
@@ -2228,12 +2506,11 @@
         }
 
         // Show timeout message with manual verification option
-        showAlert('Payment verification timeout. If you completed payment, please verify manually.', 'warning');
+        showAndroidAlert('Payment verification timeout. If you completed payment, please verify manually.', 'warning');
         
         this.cleanupPayment(transactionId);
       }
 
-      // ✅ Manual verification by user
       async manualVerification(transactionId) {
         try {
           const confirmed = confirm(
@@ -2260,16 +2537,15 @@
                 confirmationMethod: 'manual'
               });
               
-              showAlert('✅ Payment confirmation recorded! Verifying...', 'success');
+              showAndroidAlert('✅ Payment confirmation recorded! Verifying...', 'success');
             }
           }
         } catch (error) {
           console.error('Error in manual verification:', error);
-          showAlert('Error recording confirmation. Please try again.', 'error');
+          showAndroidAlert('Error recording confirmation. Please try again.', 'error');
         }
       }
 
-      // ✅ Cleanup payment monitoring
       cleanupPayment(transactionId) {
         const paymentData = this.pendingPayments.get(transactionId);
         if (paymentData && paymentData.interval) {
@@ -2279,7 +2555,7 @@
       }
     }
 
-    // ✅ Initialize UPI handler
+    // Initialize UPI handler
     const upiHandler = new UPIPaymentHandler();
 
     // Sample products with enhanced structure
@@ -2301,7 +2577,7 @@
           'https://images.unsplash.com/photo-1484704849700-f032a568e944?w=400&h=300&fit=crop'
         ],
         image: 'https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=400&h=300&fit=crop',
-        description: 'High-quality wireless headphones with noise cancellation and premium sound.'
+                description: 'High-quality wireless headphones with noise cancellation and premium sound.'
       },
       {
         id: '2',
@@ -2436,7 +2712,7 @@
       startBannerSlider();
     }
 
-    // ✅ ENHANCED: Check if user has already rated this product
+    // Enhanced Rating Functions
     async function hasUserRatedProduct(productId, userId) {
       try {
         console.log('🔍 Checking if user has rated product:', { productId, userId });
@@ -2456,7 +2732,6 @@
       }
     }
 
-    // ✅ ENHANCED: Check if user has already rated this product in orders
     async function hasUserRatedProductInOrder(productId, userId, orderId) {
       try {
         console.log('🔍 Checking order rating:', { productId, userId, orderId });
@@ -2477,12 +2752,10 @@
       }
     }
 
-    // ✅ FIXED: Enhanced Rating Save Function with Better Error Handling and Authentication
     async function saveRatingToFirebase(ratingData) {
       try {
         console.log('💾 saveRatingToFirebase called with:', ratingData);
         
-        // ✅ Check authentication state
         if (!auth.currentUser) {
           console.error('❌ No authenticated user in auth.currentUser');
           throw new Error('Please login first');
@@ -2490,7 +2763,6 @@
         
         console.log('✅ Auth user confirmed:', auth.currentUser.uid);
         
-        // ✅ Validate required fields
         if (!ratingData.productId || !ratingData.rating || !ratingData.userId) {
           console.error('❌ Missing required fields:', ratingData);
           throw new Error('Missing required rating data');
@@ -2498,11 +2770,9 @@
         
         console.log('✅ Data validation passed');
         
-        // ✅ Get ID token for additional verification
         const idToken = await auth.currentUser.getIdToken(true);
         console.log('✅ Got fresh ID token');
         
-        // ✅ Save to Firebase
         console.log('🔥 Saving to Firestore collection: productRatings');
         const docRef = await addDoc(collection(db, 'productRatings'), ratingData);
         console.log('✅ Rating saved successfully with ID:', docRef.id);
@@ -2534,7 +2804,6 @@
       }
     }
 
-    // ✅ UPDATED: Enhanced Rating Update Logic with Duplicate Check
     async function updateProductRating(productId, newRating, reviewText, orderId = null) {
       try {
         console.log('⭐ Updating product rating:', { productId, newRating, reviewText, orderId });
@@ -2543,7 +2812,6 @@
           throw new Error('User not authenticated');
         }
 
-        // Check if user has already rated this product
         const alreadyRated = orderId 
           ? await hasUserRatedProductInOrder(productId, currentUser.uid, orderId)
           : await hasUserRatedProduct(productId, currentUser.uid);
@@ -2552,7 +2820,6 @@
           throw new Error('You have already rated this product');
         }
 
-        // Find the product in our local products array
         const productIndex = products.findIndex(p => p.id === productId);
         if (productIndex === -1) {
           throw new Error('Product not found');
@@ -2560,17 +2827,14 @@
 
         const product = products[productIndex];
 
-        // Calculate new average rating
         const currentTotal = product.rating * product.ratingsCount;
         const newTotal = currentTotal + newRating;
         const newCount = product.ratingsCount + 1;
         const newAverage = newTotal / newCount;
 
-        // Update product data with new rating
         product.rating = Math.round(newAverage * 10) / 10;
         product.ratingsCount = newCount;
 
-        // Create and add new review
         const newReview = {
           id: Date.now().toString(),
           userId: currentUser.uid,
@@ -2581,15 +2845,12 @@
           orderId: orderId || null
         };
 
-        // Initialize reviews array if it doesn't exist
         if (!product.reviews) {
           product.reviews = [];
         }
 
-        // Add new review to the beginning of the array
         product.reviews.unshift(newReview);
 
-        // Try to update in Firebase (optional)
         try {
           const productDocRef = doc(db, 'products', productId);
           await updateDoc(productDocRef, {
@@ -2602,7 +2863,6 @@
           console.log('⚠️ Firebase product update failed, but local update successful:', firebaseError);
         }
 
-        // Update the products array
         products[productIndex] = product;
         console.log('✅ Product rating updated locally');
 
@@ -2705,7 +2965,7 @@
       `).join('');
     }
 
-    // ✅ Size selection function
+    // Size selection function
     window.selectSize = (size) => {
       selectedSize = size;
       
@@ -2726,13 +2986,13 @@
       }
     };
 
-    // ✅ Show Product Details WITHOUT Rating Input - Only Display Current Rating
+    // Show Product Details
     window.showProductDetails = (productId) => {
       const product = products.find(p => p.id === productId);
       if (!product) return;
       
       currentProductForRating = product;
-      selectedSize = null; // Reset size selection
+      selectedSize = null;
       
       const images = product.images || [product.image];
       const hasMultipleImages = images.length > 1;
@@ -2795,7 +3055,7 @@
             </div>
           </div>
           
-          <!-- Only Rating Display - No Input Option -->
+          <!-- Rating Display -->
           <div class="rating-display">
             <h4><i class="fas fa-star"></i> Customer Rating:</h4>
             <div class="current-rating">
@@ -2824,7 +3084,7 @@
             ` : ''}
           </div>
           
-          <!-- Info Message Instead of Rating Input -->
+          <!-- Info Message -->
           <div style="text-align: center; padding: 1rem; background: rgba(59, 130, 246, 0.1); border-radius: 8px; margin: 1rem 0;">
             <div style="color: var(--primary); margin-bottom: 0.5rem; font-weight: 600;">
               <i class="fas fa-info-circle"></i> Want to rate this product?
@@ -2834,7 +3094,7 @@
             </p>
           </div>
           
-                    <div style="text-align: left; 
+          <div style="text-align: left; 
                       background: var(--light); 
                       padding: 1rem; 
                       border-radius: 8px; 
@@ -2953,9 +3213,8 @@
       const product = products.find(p => p.id === productId);
       if (!product) return;
 
-      // Check if size is required but not selected
       if (product.availableSizes.length > 1 && !product.availableSizes.includes('One Size') && !selectedSize) {
-        showAlert('Please select a size first', 'warning');
+        showAndroidAlert('Please select a size first', 'warning');
         return;
       }
 
@@ -2981,7 +3240,7 @@
       updateCartUI();
       
       const sizeText = cartSize !== 'One Size' ? ` (Size: ${cartSize})` : '';
-      showAlert(`${product.name}${sizeText} added to cart!`, 'success');
+      showAndroidAlert(`${product.name}${sizeText} added to cart!`, 'success');
       
       closeModal('productDetailsModal');
     };
@@ -3007,10 +3266,10 @@
 
       saveCart();
       updateCartUI();
-      showAlert(`${product.name} added to cart!`, 'success');
+      showAndroidAlert(`${product.name} added to cart!`, 'success');
     };
 
-    // Enhanced Order Status Tracking with Rating after Delivery
+    // Order Status Functions
     function getOrderStatusProgress(status) {
       const statusMap = {
         'pending': { step: 1, class: 'progress-20' },
@@ -3045,7 +3304,6 @@
         { id: 'delivered', label: 'Delivered', icon: '🎉', active: false, completed: false }
       ];
       
-      // Mark steps as completed or active based on current status
       steps.forEach((step, index) => {
         if (index < progress.step) {
           step.completed = true;
@@ -3057,7 +3315,7 @@
       return steps;
     }
 
-    // Product Rating Section after Delivery - Only in Order Details
+    // Product Rating Section after Delivery
     function renderProductRatingSection(order) {
       if (!order.items || order.items.length === 0) return '';
       
@@ -3099,7 +3357,6 @@
           }
         });
         
-        // Store existing ratings globally for quick access
         window.userExistingRatings = existingRatings;
         console.log('✅ Loaded existing ratings:', existingRatings.size);
         
@@ -3109,13 +3366,11 @@
       }
     }
 
-    // Check if user has rated a specific product in a specific order
     function hasUserRatedInOrder(orderId, productId) {
       if (!window.userExistingRatings) return false;
       return window.userExistingRatings.has(`${orderId}_${productId}`);
     }
 
-    // Enhanced Product Rating Card with Pre-check
     function renderProductRatingCard(item, orderId) {
       const productRatingId = `rating_${orderId}_${item.id}`;
       const productReviewId = `review_${orderId}_${item.id}`;
@@ -3137,7 +3392,6 @@
               ` : ''}
               
               ${hasRated ? `
-                <!-- Already Rated Message -->
                 <div style="text-align: center; padding: 1rem; background: rgba(16, 185, 129, 0.1); border: 1px solid rgba(16, 185, 129, 0.3); border-radius: 8px;">
                   <i class="fas fa-check-circle" style="color: var(--success); font-size: 1.5rem; margin-bottom: 0.5rem;"></i>
                   <div style="font-weight: 600; color: var(--success); margin-bottom: 0.25rem;">
@@ -3148,9 +3402,7 @@
                   </div>
                 </div>
               ` : `
-                <!-- Rating Form Container -->
                 <div id="ratingForm_${productRatingId}" class="rating-form-container">
-                  <!-- Star Rating Input -->
                   <div style="margin-bottom: 1rem;">
                     <div style="font-weight: 600; font-size: 0.9rem; margin-bottom: 0.5rem; color: var(--dark);">
                       Rate this product:
@@ -3166,7 +3418,6 @@
                     <div class="rating-message" id="message_${productRatingId}" style="font-size: 0.8rem; color: var(--success); margin-top: 0.25rem;"></div>
                   </div>
                   
-                  <!-- Review Text Input -->
                   <div style="margin-bottom: 1rem;">
                     <div style="font-weight: 600; font-size: 0.9rem; margin-bottom: 0.5rem; color: var(--dark);">
                       Write your review:
@@ -3181,7 +3432,6 @@
                     ></textarea>
                   </div>
                   
-                  <!-- Submit Button -->
                   <button 
                     class="btn btn-primary" 
                     onclick="submitProductRating('${orderId}', '${item.id}', '${productRatingId}', '${productReviewId}')"
@@ -3198,13 +3448,12 @@
       `;
     }
 
-    // Set Product Rating Function - Only for Order Details
+    // Set Product Rating Function
     window.setProductRating = (ratingId, rating) => {
       console.log('⭐ Setting product rating:', { ratingId, rating });
       const container = document.querySelector(`[data-product-rating-id="${ratingId}"]`);
       if (!container) return;
       
-      // Update star display
       container.querySelectorAll('.product-star-input').forEach((star, index) => {
         star.classList.remove('fas', 'selected');
         star.classList.add('far');
@@ -3217,10 +3466,8 @@
         }
       });
       
-      // Store rating value
       container.setAttribute('data-selected-rating', rating);
       
-      // Show rating message
       const messages = {
         1: 'Poor ⭐',
         2: 'Fair ⭐⭐', 
@@ -3233,23 +3480,26 @@
       if (messageEl) {
         messageEl.textContent = messages[rating] || '';
       }
+
+      // Android vibration feedback
+      if (navigator.vibrate && androidOptimizer.isAndroid) {
+        navigator.vibrate(30);
+      }
     };
 
-    // ✅ FIXED: Enhanced Submit Product Rating with Authentication Check and Retry Logic
+    // Submit Product Rating with Android enhancements
     window.submitProductRating = async (orderId, productId, ratingId, reviewId) => {
       console.log('🎯 Submit rating started:', { orderId, productId, ratingId, reviewId });
       
-      // ✅ STEP 1: Check authentication
       if (!currentUser) {
         console.error('❌ No authenticated user');
-        showAlert('Please login to submit rating', 'error');
+        showAndroidAlert('Please login to submit rating', 'error');
         showModal('loginModal');
         return;
       }
       
       console.log('✅ User authenticated:', currentUser.uid);
       
-      // ✅ STEP 2: Get rating data
       const ratingContainer = document.querySelector(`[data-product-rating-id="${ratingId}"]`);
       const selectedRating = parseInt(ratingContainer?.getAttribute('data-selected-rating') || '0');
       const reviewText = document.getElementById(reviewId)?.value?.trim() || '';
@@ -3258,18 +3508,21 @@
       
       if (selectedRating === 0) {
         console.error('❌ No rating selected');
-        showAlert('Please select a rating before submitting', 'warning');
+        showAndroidAlert('Please select a rating before submitting', 'warning');
         return;
       }
       
-      // ✅ STEP 3: Update UI
       const submitBtn = document.getElementById(`submit_${ratingId}`);
       const originalText = submitBtn.innerHTML;
       submitBtn.disabled = true;
       submitBtn.innerHTML = '<span class="spinner"></span> Saving...';
       
+      // Android vibration feedback
+      if (navigator.vibrate && androidOptimizer.isAndroid) {
+        navigator.vibrate([100, 50, 100]);
+      }
+      
       try {
-        // ✅ STEP 4: Wait for auth to be ready
         console.log('🔐 Waiting for auth state...');
         await new Promise(resolve => {
           if (currentUser && currentUser.uid) {
@@ -3287,7 +3540,6 @@
         
         console.log('✅ Auth ready, user:', currentUser.uid);
         
-        // ✅ STEP 5: Check for duplicates
         console.log('🔍 Checking for duplicate ratings...');
         const alreadyRated = await hasUserRatedProductInOrder(productId, currentUser.uid, orderId);
         
@@ -3309,11 +3561,10 @@
           `;
           document.getElementById(`card_${ratingId}`).appendChild(alreadyRatedDiv);
           
-          showAlert('You have already rated this product', 'warning');
+          showAndroidAlert('You have already rated this product', 'warning');
           return;
         }
 
-        // ✅ STEP 6: Prepare rating data
         const ratingData = {
           productId: productId,
           userId: currentUser.uid,
@@ -3327,7 +3578,6 @@
         
         console.log('💾 Prepared rating data:', ratingData);
         
-        // ✅ STEP 7: Save to Firebase with retry logic
         let result;
         let retries = 3;
         
@@ -3353,14 +3603,12 @@
           }
           
           retries--;
-          await new Promise(resolve => setTimeout(resolve, 1000)); // Wait 1 second before retry
+          await new Promise(resolve => setTimeout(resolve, 1000));
         }
         
         if (result && result.success) {
-          // ✅ STEP 8: Update local product rating
           await updateProductRating(productId, selectedRating, reviewText, orderId);
           
-          // ✅ STEP 9: Update UI to show success
           document.getElementById(`ratingForm_${ratingId}`).style.display = 'none';
           
           const successMessage = document.createElement('div');
@@ -3378,14 +3626,17 @@
           
           document.getElementById(`card_${ratingId}`).appendChild(successMessage);
           
-          // Update existing ratings cache
           if (window.userExistingRatings) {
             window.userExistingRatings.add(`${orderId}_${productId}`);
           }
           
-          showAlert(`Thank you for rating this product ${selectedRating} star${selectedRating > 1 ? 's' : ''}!`, 'success');
+          showAndroidAlert(`Thank you for rating this product ${selectedRating} star${selectedRating > 1 ? 's' : ''}!`, 'success');
           
-          // Update product grid
+          // Android success notification
+          if (androidOptimizer.isAndroid) {
+            androidOptimizer.showAndroidNotification('Rating Submitted!', `Thanks for rating the product ${selectedRating} stars.`);
+          }
+          
           renderProducts(products);
           
         } else {
@@ -3396,20 +3647,24 @@
         console.error('❌ Rating submission failed:', error);
         
         if (error.message.includes('Missing or insufficient permissions')) {
-          showAlert('⚠️ Permission error. Please check your login and try again.', 'error');
+          showAndroidAlert('⚠️ Permission error. Please check your login and try again.', 'error');
         } else if (error.message === 'You have already rated this product') {
-          showAlert('You have already rated this product', 'warning');
+          showAndroidAlert('You have already rated this product', 'warning');
         } else {
-          showAlert(error.message || 'Error saving rating. Please try again.', 'error');
+          showAndroidAlert(error.message || 'Error saving rating. Please try again.', 'error');
         }
         
-        // Reset button
         submitBtn.disabled = false;
         submitBtn.innerHTML = originalText;
       }
     };
 
-    // Enhanced renderDynamicOrderTracking with Rating after Delivery
+    // Replace showAlert with showAndroidAlert
+    window.showAlert = showAndroidAlert;
+
+    // Rest of the functions continue...
+    // [Continue with remaining functions like renderDynamicOrderTracking, toggleWishlist, etc.]
+
     function renderDynamicOrderTracking(order) {
       const steps = getStatusSteps(order.status);
       const progress = getOrderStatusProgress(order.status);
@@ -3503,10 +3758,10 @@
 
       if (wishlist.includes(productId)) {
         wishlist = wishlist.filter(id => id !== productId);
-        showAlert(`${product.name} removed from wishlist`, 'warning');
+        showAndroidAlert(`${product.name} removed from wishlist`, 'warning');
       } else {
         wishlist.push(productId);
-        showAlert(`${product.name} added to wishlist`, 'success');
+        showAndroidAlert(`${product.name} added to wishlist`, 'success');
       }
 
       localStorage.setItem('wishlist', JSON.stringify(wishlist));
@@ -3515,7 +3770,6 @@
       renderWishlist();
     };
 
-    // Update wishlist button in modal
     window.updateModalWishlistButton = (productId) => {
       const button = document.querySelector(`[onclick*="updateModalWishlistButton('${productId}')"]`);
       if (button) {
@@ -3529,7 +3783,6 @@
       }
     };
 
-    // Update Wishlist UI
     function updateWishlistUI() {
       document.querySelectorAll('[data-product-id]').forEach(btn => {
         const productId = btn.getAttribute('data-product-id');
@@ -3547,7 +3800,6 @@
       });
     }
 
-    // Render Wishlist
     function renderWishlist() {
       const container = document.getElementById('wishlistContainer');
       
@@ -3585,14 +3837,12 @@
       `;
     }
 
-    // Remove from Cart
     window.removeFromCart = (productId, size = '') => {
       cart = cart.filter(item => !(item.id === productId && (item.selectedSize === size || !size)));
       saveCart();
       updateCartUI();
     };
 
-    // Update Cart Quantity
     window.updateQuantity = (productId, change, size = '') => {
       const item = cart.find(item => item.id === productId && (item.selectedSize === size || !size));
       if (!item) return;
@@ -3606,7 +3856,6 @@
       }
     };
 
-    // Clear Cart
     window.clearCart = () => {
       if (confirm('Are you sure you want to clear your cart?')) {
         cart = [];
@@ -3615,12 +3864,10 @@
       }
     };
 
-    // Save Cart to LocalStorage
     function saveCart() {
       localStorage.setItem('cart', JSON.stringify(cart));
     }
 
-    // Update Cart UI - Mobile Optimized with Size Display
     function updateCartUI() {
       const badge = document.getElementById('cartBadge');
       const itemCount = cart.reduce((total, item) => total + item.quantity, 0);
@@ -3664,7 +3911,7 @@
       const total = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
       cartTotal.textContent = `₹${total.toLocaleString()}`;
 
-      const checkoutBtn = document.getElementById('checkoutBtn');
+            const checkoutBtn = document.getElementById('checkoutBtn');
       checkoutBtn.disabled = cart.length === 0;
       
       const checkoutTotal = document.getElementById('checkoutTotal');
@@ -3689,12 +3936,22 @@
       const modal = document.getElementById(modalId);
       modal.classList.add('show');
       document.body.style.overflow = 'hidden';
+      
+      // Dispatch Android checkout event
+      if (modalId === 'checkoutModal') {
+        document.dispatchEvent(new CustomEvent('checkout-start'));
+      }
     };
 
     window.closeModal = (modalId) => {
       const modal = document.getElementById(modalId);
       modal.classList.remove('show');
       document.body.style.overflow = '';
+      
+      // Dispatch Android checkout end event
+      if (modalId === 'checkoutModal') {
+        document.dispatchEvent(new CustomEvent('checkout-end'));
+      }
     };
 
     // Auth Functions
@@ -3734,7 +3991,7 @@
       }
     });
 
-    // ✅ Enhanced status checking for existing payments
+    // Enhanced status checking for existing payments
     async function checkExistingPayments() {
       if (!currentUser) return;
       
@@ -3791,7 +4048,6 @@
       }
     }
 
-    // Update profile display with user data
     function updateProfileDisplay() {
       if (currentUser) {
         const displayName = document.getElementById('displayName');
@@ -3804,7 +4060,6 @@
       }
     }
 
-    // Update profile stats
     function updateProfileStats() {
       if (currentUser) {
         const orderCountEl = document.getElementById('orderCount');
@@ -3837,46 +4092,54 @@
       try {
         if (isLogin) {
           await signInWithEmailAndPassword(auth, email, password);
-          showAlert('Login successful!', 'success');
+          showAndroidAlert('Login successful!', 'success');
+          
+          // Android login notification
+          if (androidOptimizer.isAndroid) {
+            androidOptimizer.showAndroidNotification('Welcome back!', 'You have successfully logged in to Crodyto.');
+          }
         } else {
           const credential = await createUserWithEmailAndPassword(auth, email, password);
           if (fullName) {
             await updateProfile(credential.user, { displayName: fullName });
           }
-          showAlert('Account created successfully!', 'success');
+          showAndroidAlert('Account created successfully!', 'success');
+          
+          // Android registration notification
+          if (androidOptimizer.isAndroid) {
+            androidOptimizer.showAndroidNotification('Welcome to Crodyto!', 'Your account has been created successfully.');
+          }
         }
         
         closeModal('loginModal');
         document.getElementById('authForm').reset();
       } catch (error) {
-        showAlert(error.message, 'error');
+        showAndroidAlert(error.message, 'error');
       }
     });
 
-    // Reset Password
     window.resetPassword = async () => {
       const email = document.getElementById('email').value;
       if (!email) {
-        showAlert('Please enter your email first', 'error');
+        showAndroidAlert('Please enter your email first', 'error');
         return;
       }
 
       try {
         await sendPasswordResetEmail(auth, email);
-        showAlert('Password reset email sent!', 'success');
+        showAndroidAlert('Password reset email sent!', 'success');
       } catch (error) {
-        showAlert(error.message, 'error');
+        showAndroidAlert(error.message, 'error');
       }
     };
 
-    // Sign Out
     window.signOut = async () => {
       try {
         await firebaseSignOut(auth);
-        showAlert('Signed out successfully', 'success');
+        showAndroidAlert('Signed out successfully', 'success');
         closeModal('profileModal');
       } catch (error) {
-        showAlert(error.message, 'error');
+        showAndroidAlert(error.message, 'error');
       }
     };
 
@@ -3890,15 +4153,14 @@
       
       try {
         await updateProfile(currentUser, { displayName: name });
-        showAlert('Profile updated successfully!', 'success');
+        showAndroidAlert('Profile updated successfully!', 'success');
         updateAuthUI();
         updateProfileDisplay();
       } catch (error) {
-        showAlert(error.message, 'error');
+        showAndroidAlert(error.message, 'error');
       }
     });
 
-    // Profile Tabs
     window.switchTab = (tabName) => {
       document.querySelectorAll('.profile-tab').forEach(tab => tab.classList.remove('active'));
       document.querySelector(`[onclick="switchTab('${tabName}')"]`).classList.add('active');
@@ -3915,16 +4177,14 @@
       }
     };
 
-    // Enhanced Profile Functions
     window.showContactForm = () => {
-      showAlert('📧 Contact support: support@crodyto.com', 'success');
+      showAndroidAlert('📧 Contact support: support@crodyto.com', 'success');
     };
 
     window.downloadProfile = () => {
-      showAlert('📥 Export data feature coming soon!', 'success');
+      showAndroidAlert('📥 Export data feature coming soon!', 'success');
     };
 
-    // Enhanced Order Rendering with Product Rating Support
     function renderOrdersWithTracking(orders) {
       const container = document.getElementById('ordersContainer');
       
@@ -4016,8 +4276,6 @@
                   <div style="font-size: 0.85rem;"><strong>Phone:</strong> ${order.phone || 'N/A'}</div>
                   <div style="font-size: 0.85rem;"><strong>Payment:</strong> ${order.paymentMethod?.toUpperCase() || 'N/A'}</div>
                 </div>
-                
-                ${getStatusUpdateButtons(order.id, order.status)}
               </div>
             </div>
           `;
@@ -4025,68 +4283,6 @@
       `;
     }
 
-    // Add Status Update Buttons
-    function getStatusUpdateButtons(orderId, currentStatus) {
-      const nextStatuses = {
-        'pending': ['confirmed', 'cancelled'],
-        'placed': ['confirmed', 'cancelled'],
-        'confirmed': ['processing', 'cancelled'],
-        'processing': ['shipped', 'cancelled'],
-        'shipped': ['out_for_delivery'],
-        'out_for_delivery': ['delivered'],
-        'delivered': [],
-        'cancelled': []
-      };
-      
-      const statusLabels = {
-        'confirmed': '✅ Confirm Order',
-        'processing': '⚡ Start Processing',
-        'shipped': '📦 Mark as Shipped',
-        'out_for_delivery': '🚚 Out for Delivery',
-        'delivered': '🎉 Mark as Delivered',
-        'cancelled': '❌ Cancel Order'
-      };
-      
-      const possibleStatuses = nextStatuses[currentStatus] || [];
-      
-      if (possibleStatuses.length === 0) return '';
-      
-      return `
-        <div style="margin-top: 1rem; padding: 1rem; background: #f8fafc; border-radius: var(--radius); border: 1px solid var(--border);">
-          <h6 style="color: var(--primary); margin-bottom: 0.75rem; font-size: 0.9rem;">📝 Update Status:</h6>
-          <div style="display: flex; gap: 0.5rem; flex-wrap: wrap;">
-            ${possibleStatuses.map(status => `
-              <button class="btn ${status === 'cancelled' ? 'btn-outline' : 'btn-primary'}" 
-                      style="font-size: 0.8rem; padding: 0.5rem 0.75rem; ${status === 'cancelled' ? 'color: var(--danger); border-color: var(--danger);' : ''}"
-                      onclick="updateOrderStatus('${orderId}', '${status}')">
-                ${statusLabels[status]}
-              </button>
-            `).join('')}
-          </div>
-        </div>
-      `;
-    }
-
-    // Update Order Status Function
-    window.updateOrderStatus = async (orderId, newStatus) => {
-      if (!currentUser) return;
-      
-      try {
-        await updateDoc(doc(db, 'orders', orderId), {
-          status: newStatus,
-          lastUpdated: serverTimestamp()
-        });
-        
-        showAlert(`Order status updated to ${newStatus.replace('_', ' ')}`, 'success');
-        loadUserOrders(); // Refresh orders
-        
-      } catch (error) {
-        console.error('Error updating order status:', error);
-        showAlert('Error updating order status', 'error');
-      }
-    };
-
-    // Load User Orders with Rating Check
     async function loadUserOrders() {
       if (!currentUser) return;
       
@@ -4139,7 +4335,6 @@
       }
     }
 
-    // Toggle Order Details
     window.toggleOrderDetails = (orderId) => {
       const details = document.getElementById(`details-${orderId}`);
       const button = document.querySelector(`[onclick="toggleOrderDetails('${orderId}')"]`);
@@ -4155,13 +4350,11 @@
       }
     };
 
-    // Copy Order ID
     window.copyOrderId = (orderId) => {
       navigator.clipboard.writeText(orderId);
-      showAlert('Order ID copied!', 'success');
+      showAndroidAlert('Order ID copied!', 'success');
     };
 
-    // Cancel Order
     window.cancelOrder = async (orderId) => {
       if (!confirm('Cancel this order?')) return;
       
@@ -4171,23 +4364,22 @@
           cancelledAt: serverTimestamp()
         });
         
-        showAlert('Order cancelled successfully', 'success');
+        showAndroidAlert('Order cancelled successfully', 'success');
         loadUserOrders();
       } catch (error) {
-        showAlert('Error cancelling order', 'error');
+        showAndroidAlert('Error cancelling order', 'error');
       }
     };
 
-    // Checkout
     window.checkout = () => {
       if (!currentUser) {
-        showAlert('Please login to continue', 'error');
+        showAndroidAlert('Please login to continue', 'error');
         showModal('loginModal');
         return;
       }
       
       if (cart.length === 0) {
-        showAlert('Your cart is empty', 'error');
+        showAndroidAlert('Your cart is empty', 'error');
         return;
       }
       
@@ -4198,7 +4390,6 @@
       showModal('checkoutModal');
     };
 
-    // Payment Method Selection
     window.selectPaymentMethod = (method) => {
       document.getElementById(method).checked = true;
       
@@ -4260,14 +4451,14 @@
         };
         
         setTimeout(() => {
-          showAlert(paymentMessages[paymentMethod], 'success');
+          showAndroidAlert(paymentMessages[paymentMethod], 'success');
         }, 1000);
         
         updateProfileStats();
         
       } catch (error) {
         console.error('Error placing order:', error);
-        showAlert('Error placing order. Please try again.', 'error');
+        showAndroidAlert('Error placing order. Please try again.', 'error');
       } finally {
         button.disabled = false;
         button.innerHTML = originalText;
@@ -4277,7 +4468,6 @@
       }
     }
 
-    // Show Order Placed Notification
     function showOrderPlacedNotification(orderId) {
       const notification = document.createElement('div');
       notification.className = 'order-notification';
@@ -4293,6 +4483,11 @@
       `;
       
       document.body.appendChild(notification);
+      
+      // Android success vibration
+      if (navigator.vibrate && androidOptimizer.isAndroid) {
+        navigator.vibrate([200, 100, 200, 100, 200]);
+      }
       
       setTimeout(() => {
         notification.style.animation = 'slideOutCenter 0.5s ease-in forwards';
@@ -4313,7 +4508,7 @@
       }
     }
 
-    // ✅ ENHANCED: Updated checkout form handler with UPI Payment System
+    // Enhanced checkout form handler with UPI Payment System
     document.getElementById('checkoutForm').addEventListener('submit', async (e) => {
       e.preventDefault();
       
@@ -4338,28 +4533,17 @@
         };
 
         try {
-          // Initiate UPI payment with monitoring
           const paymentResult = await upiHandler.initiateUPIPayment(total, orderData);
           
           if (paymentResult.success) {
-            // Hide place order button
             const button = document.getElementById('placeOrderBtn');
             button.style.display = 'none';
             
-            // Add mobile UPI button
-            const mobileBtn = document.createElement('button');
-            mobileBtn.className = 'upi-mobile-btn';
-            mobileBtn.innerHTML = '📱 Open UPI App & Pay ₹' + total.toLocaleString();
-            mobileBtn.onclick = () => {
-              window.location.href = paymentResult.upiUrl;
-            };
-            button.parentNode.insertBefore(mobileBtn, button);
-
-            showAlert('🔍 Payment monitoring started. Complete payment to continue.', 'success');
+            showAndroidAlert('🔍 Payment monitoring started. Complete payment to continue.', 'success');
           }
         } catch (error) {
           console.error('Error initiating UPI payment:', error);
-          showAlert('Error setting up payment. Please try again.', 'error');
+          showAndroidAlert('Error setting up payment. Please try again.', 'error');
         }
         
         return;
@@ -4411,7 +4595,7 @@
       });
     }
 
-    // Alert System - Mobile Optimized
+    // Alert System - Android Optimized
     function showAlert(message, type = 'success') {
       // Remove existing alerts
       document.querySelectorAll('.alert').forEach(alert => alert.remove());
@@ -4429,7 +4613,7 @@
 
     // Initialize App
     document.addEventListener('DOMContentLoaded', () => {
-      console.log('🚀 Crodyto app initializing...');
+      console.log('🚀 Crodyto Android-Optimized app initializing...');
       
       createBannerSlider();
       
@@ -4512,9 +4696,19 @@
         }, false);
       }
       
-      console.log('✅ Crodyto app initialized successfully!');
+      console.log('✅ Crodyto Android-Optimized app initialized successfully!');
+      
+      // Android welcome notification
+      if (androidOptimizer.isAndroid) {
+        setTimeout(() => {
+          if (Notification.permission === 'granted') {
+            androidOptimizer.showAndroidNotification('Welcome to Crodyto!', 'Your Android-optimized shopping experience is ready.');
+          }
+        }, 3000);
+      }
     });
 
   </script>
 </body>
 </html>
+
