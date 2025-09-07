@@ -252,8 +252,11 @@
   margin-bottom: 2rem;
   box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
   
-  /* ✅ Phone responsive height */
-  height: clamp(180px, 30vh, 500px);
+  /* ✅ সব device এ strict 16:6 ratio */
+  aspect-ratio: 16 / 5;
+  
+  /* ✅ Responsive height limits */
+  height: clamp(150px, calc(100vw * 0.375), 500px);
 }
 
 
