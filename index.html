@@ -246,13 +246,16 @@
   
   /* ✅ ENHANCED BANNER SLIDER */
   .hero-banner-slider {
-    position: relative;
-    width: 100%;
-    aspect-ratio: 16 / 6;
-    overflow: hidden;
-    margin-bottom: 2rem;
-    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
-  }
+  position: relative;
+  width: 100%;
+  overflow: hidden;
+  margin-bottom: 2rem;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+  
+  /* ✅ Phone responsive height */
+  height: clamp(180px, 30vh, 500px);
+}
+
 
   .banner-slider-container {
     position: relative;
