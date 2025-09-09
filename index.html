@@ -10,11 +10,6 @@
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="default">
-<link rel="manifest" href="data:application/json;base64,eyJuYW1lIjoiQ3JvZHl0byAtIE1vYmlsZSBFLWNvbW1lcmNlIiwic2hvcnRfbmFtZSI6IkNyb2R5dG8iLCJkZXNjcmlwdGlvbiI6Ik1vYmlsZSBGaXJzdCBFLWNvbW1lcmNlIFBsYXRmb3JtIiwic3RhcnRfdXJsIjoiLyIsImRpc3BsYXkiOiJzdGFuZGFsb25lIiwib3JpZW50YXRpb24iOiJwb3J0cmFpdC1wcmltYXJ5IiwidGhlbWVfY29sb3IiOiIjM2I4MmY2IiwiYmFja2dyb3VuZF9jb2xvciI6IiNmOGZhZmMiLCJpY29ucyI6W3sic3JjIjoiZGF0YTppbWFnZS9wbmc7YmFzZTY0LGlWQk9SdzBLR2dvQUFBQU5TVWhFVWdBQUFNQUFBQURBQ0FZQUFBQlMzR3dIQUFBQUNYQklXWE1BQUFzVEFBQUxFd0VBbXB3WUFBQUZaa2xFUVZSNG5PMWQzVzNiTUJTQVVTZkksInNpemVzIjoiMTkyeDE5MiIsInR5cGUiOiJpbWFnZS9wbmcifSx7InNyYyI6ImRhdGE6aW1hZ2UvcG5nO2Jhc2U2NCxpVkJPUncwS0dnb0FBQUFOUVVIQ1VnQUFBZ0FBQUFJQUNBWUFBQUQ=",InNpemVzIjoiNTEyeDUxMiIsInR5cGUiOiJpbWFnZS9wbmcifV0sImNhdGVnb3JpZXMiOlsic2hvcHBpbmciLCJidXNpbmVzcyJdLCJsYW5nIjoiZW4tVVMifQ==">
-
-<!-- Android Icons -->
-<link rel="icon" sizes="192x192" href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAMAAAADACAYAAABS3GwHAAAFZklEQVR4nO3d3W3bMBSAUSfI">
-<link rel="icon" sizes="512x512" href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAgAAAAIACAYAAAD0eNT6AAAF">
 
 <!-- Confetti Library -->
 <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.2/dist/confetti.browser.min.js"></script>
@@ -26,7 +21,7 @@
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
 <style>
-  /* ✅ MOBILE FIRST CSS DESIGN - STARTS FROM 320px */
+  /* ✅ MOBILE FIRST CSS DESIGN - COMPLETE STYLES */
   
   :root {
     --primary: #3b82f6;
@@ -48,7 +43,6 @@
     touch-action: manipulation;
   }
 
-  /* Android Chrome address bar optimization */
   html {
     height: 100vh;
     height: -webkit-fill-available;
@@ -59,7 +53,6 @@
     min-height: -webkit-fill-available;
   }
 
-  /* Android vibration effect */
   .btn-vibrate {
     animation: androidVibrate 0.1s;
   }
@@ -70,13 +63,11 @@
     75% { transform: translateX(2px); }
   }
 
-  /* Better Android scrolling */
   * {
     -webkit-overflow-scrolling: touch;
     scroll-behavior: smooth;
   }
 
-  /* Android notification style */
   .android-notification {
     position: fixed;
     top: 0;
@@ -246,19 +237,14 @@
   
   /* ✅ ENHANCED BANNER SLIDER */
   .hero-banner-slider {
-  position: relative;
-  width: 100%;
-  overflow: hidden;
-  margin-bottom: 2rem;
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
-  
-  /* ✅ সব device এ strict 16:6 ratio */
-  aspect-ratio: 16 / 5;
-  
-  /* ✅ Responsive height limits */
-  height: clamp(150px, calc(100vw * 0.375), 500px);
-}
-
+    position: relative;
+    width: 100%;
+    overflow: hidden;
+    margin-bottom: 2rem;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+    aspect-ratio: 16 / 5;
+    height: clamp(150px, calc(100vw * 0.375), 500px);
+  }
 
   .banner-slider-container {
     position: relative;
@@ -398,6 +384,121 @@
     z-index: 10;
     text-transform: uppercase;
     letter-spacing: 1px;
+  }
+
+  /* ✅ ENHANCED PRODUCT IMAGE SLIDER - HORIZONTAL SLIDING */
+  .product-image-slider {
+    position: relative;
+    width: 100%;
+    height: 300px;
+    margin-bottom: 1.5rem;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+    background: var(--light);
+  }
+
+  .product-images-container {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    transition: transform 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    cursor: grab;
+  }
+
+  .product-images-container:active {
+    cursor: grabbing;
+  }
+
+  .product-images-container img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    flex-shrink: 0;
+    border-radius: 0;
+    opacity: 1;
+    transition: none;
+    display: block;
+  }
+
+  .product-nav {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    background: rgba(0, 0, 0, 0.7);
+    color: white;
+    width: 45px;
+    height: 45px;
+    border-radius: 50%;
+    border: none;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.1rem;
+    transition: all 0.3s ease;
+    z-index: 10;
+    backdrop-filter: blur(5px);
+  }
+
+  .product-nav:hover {
+    background: rgba(0, 0, 0, 0.9);
+    transform: translateY(-50%) scale(1.1);
+  }
+
+  .product-nav.prev {
+    left: 15px;
+  }
+
+  .product-nav.next {
+    right: 15px;
+  }
+
+  .product-image-indicators {
+    position: absolute;
+    bottom: 15px;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    gap: 8px;
+    z-index: 10;
+  }
+
+  .product-image-dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.5);
+    border: none;
+    cursor: pointer;
+    transition: all 0.3s ease;
+  }
+
+  .product-image-dot.active {
+    background: white;
+    transform: scale(1.3);
+    box-shadow: 0 2px 8px rgba(255, 255, 255, 0.3);
+  }
+
+  .product-image-counter {
+    position: absolute;
+    top: 15px;
+    right: 15px;
+    background: rgba(0, 0, 0, 0.7);
+    color: white;
+    padding: 6px 12px;
+    border-radius: 20px;
+    font-size: 0.8rem;
+    font-weight: 600;
+    z-index: 10;
+    backdrop-filter: blur(5px);
+  }
+
+  .product-image-slider.single-image .product-nav,
+  .product-image-slider.single-image .product-image-indicators,
+  .product-image-slider.single-image .product-image-counter {
+    display: none;
   }
 
   /* ✅ SIZE SELECTION STYLES */
@@ -1478,6 +1579,32 @@
       font-size: 0.8rem;
       padding: 6px 12px;
     }
+
+    .product-image-slider {
+      height: 250px;
+      margin-bottom: 1rem;
+    }
+    
+    .product-nav {
+      width: 40px;
+      height: 40px;
+      font-size: 1rem;
+    }
+    
+    .product-nav.prev {
+      left: 10px;
+    }
+    
+    .product-nav.next {
+      right: 10px;
+    }
+    
+    .product-image-counter {
+      top: 10px;
+      right: 10px;
+      font-size: 0.75rem;
+      padding: 4px 8px;
+    }
   }
   
   @media (min-width: 600px) {
@@ -1614,6 +1741,17 @@
   <section class="hero-banner-slider">
     <div class="banner-slider-container" id="bannerSlider"></div>
     
+    <div class="banner-overlay">
+      <div class="hero-content">
+        <h1>Welcome to Crodyto</h1>
+        <p>Discover amazing products at unbeatable prices</p>
+        <button class="btn btn-primary" onclick="document.getElementById('products').scrollIntoView({ behavior: 'smooth' })">
+          <i class="fas fa-shopping-bag"></i>
+          Shop Now
+        </button>
+      </div>
+    </div>
+    
     <button class="banner-nav prev" id="prevBtn">
       <i class="fas fa-chevron-left"></i>
     </button>
@@ -1726,7 +1864,7 @@
           </button>
           <button class="profile-tab" onclick="switchTab('orders')">
             <i class="fas fa-box"></i>
-            Orders
+            My Orders
           </button>
           <button class="profile-tab" onclick="switchTab('wishlist')">
             <i class="fas fa-heart"></i>
@@ -1969,6 +2107,12 @@
   </div>
 
   <!-- Firebase SDK -->
+  <script type="module">
+    // Continue with JavaScript from here...
+    // I'll provide the complete JavaScript in the next part due to length limits
+  </script>
+
+  <!-- COMPLETE JAVASCRIPT CODE - Part 2 -->
   <script type="module">
     import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js';
     import { getFirestore, collection, addDoc, getDocs, query, where, orderBy, doc, updateDoc, serverTimestamp, arrayUnion } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js';
@@ -2572,7 +2716,7 @@
           'https://images.unsplash.com/photo-1484704849700-f032a568e944?w=400&h=300&fit=crop'
         ],
         image: 'https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=400&h=300&fit=crop',
-                description: 'High-quality wireless headphones with noise cancellation and premium sound.'
+        description: 'High-quality wireless headphones with noise cancellation and premium sound.'
       },
       {
         id: '2',
@@ -2607,7 +2751,7 @@
           'https://images.unsplash.com/photo-1542291026-7eec264c27ff?w=400&h=300&fit=crop'
         ],
         image: 'https://images.unsplash.com/photo-1542291026-7eec264c27ff?w=400&h=300&fit=crop',
-        description: 'Professional running shoes with excellent comfort, grip, and durability.'
+                description: 'Professional running shoes with excellent comfort, grip, and durability.'
       }
     ];
 
@@ -2981,7 +3125,133 @@
       }
     };
 
-    // Show Product Details
+    // ✅ ENHANCED PRODUCT IMAGE SLIDER - HORIZONTAL SLIDING
+    let currentProductImageIndex = 0;
+    let productImages = [];
+    let isSliding = false;
+
+    function initProductImageSlider(images) {
+      productImages = images;
+      currentProductImageIndex = 0;
+      
+      const container = document.getElementById('productImagesContainer');
+      if (container) {
+        // Set initial transform
+        updateSliderTransform();
+        
+        // Touch/Mouse events for swipe
+        let startX = 0;
+        let endX = 0;
+        let isDragging = false;
+
+        // Mouse events
+        container.addEventListener('mousedown', (e) => {
+          isDragging = true;
+          startX = e.clientX;
+          container.style.cursor = 'grabbing';
+        });
+
+        container.addEventListener('mousemove', (e) => {
+          if (!isDragging) return;
+          e.preventDefault();
+        });
+
+        container.addEventListener('mouseup', (e) => {
+          if (!isDragging) return;
+          isDragging = false;
+          endX = e.clientX;
+          container.style.cursor = 'grab';
+          handleSliderSwipe();
+        });
+
+        container.addEventListener('mouseleave', () => {
+          isDragging = false;
+          container.style.cursor = 'grab';
+        });
+
+        // Touch events
+        container.addEventListener('touchstart', (e) => {
+          startX = e.touches[0].clientX;
+        }, { passive: true });
+
+        container.addEventListener('touchmove', (e) => {
+          e.preventDefault();
+        });
+
+        container.addEventListener('touchend', (e) => {
+          endX = e.changedTouches[0].clientX;
+          handleSliderSwipe();
+        });
+
+        function handleSliderSwipe() {
+          const diff = startX - endX;
+          const threshold = 50;
+          
+          if (Math.abs(diff) > threshold) {
+            if (diff > 0) {
+              nextProductImage();
+            } else {
+              prevProductImage();
+            }
+          }
+        }
+      }
+    }
+
+    function updateSliderTransform() {
+      const container = document.getElementById('productImagesContainer');
+      if (container) {
+        const translateX = -currentProductImageIndex * 100;
+        container.style.transform = `translateX(${translateX}%)`;
+      }
+    }
+
+    window.nextProductImage = () => {
+      if (isSliding) return;
+      const nextIndex = (currentProductImageIndex + 1) % productImages.length;
+      showProductImage(nextIndex);
+    };
+
+    window.prevProductImage = () => {
+      if (isSliding) return;
+      const prevIndex = (currentProductImageIndex - 1 + productImages.length) % productImages.length;
+      showProductImage(prevIndex);
+    };
+
+    window.goToProductImage = (index) => {
+      if (isSliding) return;
+      showProductImage(index);
+    };
+
+    function showProductImage(index) {
+      if (isSliding || index === currentProductImageIndex) return;
+      
+      isSliding = true;
+      const dots = document.querySelectorAll('.product-image-dot');
+      const counter = document.getElementById('productImageCounter');
+      
+      // Update indicators
+      dots.forEach(dot => dot.classList.remove('active'));
+      if (dots[index]) {
+        dots[index].classList.add('active');
+      }
+      
+      // Update counter
+      if (counter) {
+        counter.textContent = `${index + 1} / ${productImages.length}`;
+      }
+      
+      // Update slider position
+      currentProductImageIndex = index;
+      updateSliderTransform();
+      
+      // Reset sliding flag after transition
+      setTimeout(() => {
+        isSliding = false;
+      }, 400);
+    }
+
+    // Show Product Details with Enhanced Horizontal Image Slider
     window.showProductDetails = (productId) => {
       const product = products.find(p => p.id === productId);
       if (!product) return;
@@ -2997,7 +3267,7 @@
           <div class="product-image-slider ${!hasMultipleImages ? 'single-image' : ''}" id="productImageSlider">
             <div class="product-images-container" id="productImagesContainer">
               ${images.map((img, index) => `
-                <img src="${img}" alt="${product.name}" class="${index === 0 ? 'active' : ''}" 
+                <img src="${img}" alt="${product.name}" 
                      onerror="this.src='https://images.unsplash.com/photo-1560472354-b33ff0c44a43?w=400&h=300&fit=crop'">
               `).join('')}
             </div>
@@ -3130,78 +3400,6 @@
       
       showModal('productDetailsModal');
     };
-
-    // Product Image Slider Functions
-    let currentProductImageIndex = 0;
-    let productImages = [];
-
-    function initProductImageSlider(images) {
-      productImages = images;
-      currentProductImageIndex = 0;
-      
-      const container = document.getElementById('productImagesContainer');
-      if (container) {
-        let startX = 0;
-        let endX = 0;
-
-        container.addEventListener('touchstart', (e) => {
-          startX = e.touches[0].clientX;
-        });
-
-        container.addEventListener('touchmove', (e) => {
-          e.preventDefault();
-        });
-
-        container.addEventListener('touchend', (e) => {
-          endX = e.changedTouches[0].clientX;
-          handleProductImageSwipe();
-        });
-
-        function handleProductImageSwipe() {
-          const diff = startX - endX;
-          const threshold = 50;
-          
-          if (Math.abs(diff) > threshold) {
-            if (diff > 0) {
-              nextProductImage();
-            } else {
-              prevProductImage();
-            }
-          }
-        }
-      }
-    }
-
-    window.nextProductImage = () => {
-      const nextIndex = (currentProductImageIndex + 1) % productImages.length;
-      showProductImage(nextIndex);
-    };
-
-    window.prevProductImage = () => {
-      const prevIndex = (currentProductImageIndex - 1 + productImages.length) % productImages.length;
-      showProductImage(prevIndex);
-    };
-
-    window.goToProductImage = (index) => {
-      showProductImage(index);
-    };
-
-    function showProductImage(index) {
-      const images = document.querySelectorAll('#productImagesContainer img');
-      const dots = document.querySelectorAll('.product-image-dot');
-      const counter = document.getElementById('productImageCounter');
-      
-      images.forEach(img => img.classList.remove('active'));
-      dots.forEach(dot => dot.classList.remove('active'));
-      
-      if (images[index]) {
-        images[index].classList.add('active');
-        dots[index].classList.add('active');
-        counter.textContent = `${index + 1} / ${productImages.length}`;
-      }
-      
-      currentProductImageIndex = index;
-    }
 
     // Updated add to cart with size
     window.addToCartWithSize = (productId) => {
@@ -3657,9 +3855,6 @@
     // Replace showAlert with showAndroidAlert
     window.showAlert = showAndroidAlert;
 
-    // Rest of the functions continue...
-    // [Continue with remaining functions like renderDynamicOrderTracking, toggleWishlist, etc.]
-
     function renderDynamicOrderTracking(order) {
       const steps = getStatusSteps(order.status);
       const progress = getOrderStatusProgress(order.status);
@@ -3906,7 +4101,7 @@
       const total = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
       cartTotal.textContent = `₹${total.toLocaleString()}`;
 
-            const checkoutBtn = document.getElementById('checkoutBtn');
+      const checkoutBtn = document.getElementById('checkoutBtn');
       checkoutBtn.disabled = cart.length === 0;
       
       const checkoutTotal = document.getElementById('checkoutTotal');
@@ -4706,4 +4901,3 @@
   </script>
 </body>
 </html>
-
