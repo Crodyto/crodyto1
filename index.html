@@ -156,7 +156,7 @@
   .search-bar input:focus {
     border-color: var(--primary);
     box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
-    font-size: 16px; /* Prevents zoom on Android */
+    font-size: 16px;
   }
   
   .btn {
@@ -386,7 +386,7 @@
     letter-spacing: 1px;
   }
 
-  /* ✅ ENHANCED PRODUCT IMAGE SLIDER - HORIZONTAL SLIDING */
+  /* ✅ ENHANCED PRODUCT IMAGE SLIDER */
   .product-image-slider {
     position: relative;
     width: 100%;
@@ -1211,7 +1211,7 @@
   .profile-form-input:focus {
     border-color: var(--primary);
     box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
-    font-size: 16px; /* Prevents zoom on Android */
+    font-size: 16px;
   }
   
   .tab-content {
@@ -1262,7 +1262,7 @@
   .status-delivered { background: #d1fae5; color: #065f46; }
   .status-cancelled { background: #fee2e2; color: #991b1b; }
   
-  /* ✅ ORDER STATUS TRACKING - 5 Steps */
+  /* ✅ ORDER STATUS TRACKING */
   .order-status-bar {
     display: flex;
     list-style: none;
@@ -1416,21 +1416,6 @@
     position: relative;
     overflow: hidden;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-  }
-  
-  .upi-mobile-btn {
-    display: block;
-    width: 100%;
-    padding: 1rem;
-    background: linear-gradient(135deg, var(--success), #059669);
-    color: white;
-    border: none;
-    border-radius: var(--radius);
-    font-size: 1rem;
-    font-weight: bold;
-    cursor: pointer;
-    margin: 1rem 0;
-    transition: all 0.3s ease;
   }
   
   /* ✅ ALERT MOBILE OPTIMIZED */
@@ -1782,8 +1767,30 @@
       <div class="modal-body">
         <div id="alertContainer"></div>
         
+        <!-- Google Sign-In Button -->
+        <div style="margin-bottom: 1.5rem;">
+          <button class="btn btn-primary" onclick="isMobile() ? signInWithGoogleRedirect() : signInWithGoogle()" 
+                  style="width: 100%; background: linear-gradient(135deg, #4285f4, #34a853); border: none; padding: 0.75rem 1rem; font-size: 1rem; display: flex; align-items: center; justify-content: center; gap: 0.75rem;">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="white">
+              <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
+              <path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
+              <path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/>
+              <path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/>
+            </svg>
+            Continue with Google
+          </button>
+        </div>
+        
+        <!-- Divider -->
+        <div style="display: flex; align-items: center; margin: 1.5rem 0; gap: 1rem;">
+          <div style="flex: 1; height: 1px; background: var(--border);"></div>
+          <span style="color: var(--gray); font-size: 0.875rem; font-weight: 500;">or</span>
+          <div style="flex: 1; height: 1px; background: var(--border);"></div>
+        </div>
+        
+        <!-- Toggle Login/Register -->
         <div style="margin-bottom: 1rem;">
-          <button class="btn btn-primary" onclick="toggleAuthMode()" id="authToggle" style="width: 100%;">
+          <button class="btn btn-ghost" onclick="toggleAuthMode()" id="authToggle" style="width: 100%; border: 2px solid var(--border);">
             Switch to Register
           </button>
         </div>
@@ -2044,12 +2051,12 @@
           <h4 style="margin: 1.5rem 0 1rem; color: var(--primary);">💳 Payment Method</h4>
           
           <div class="payment-methods" style="margin: 1rem 0;">
-            <div class="payment-method" onclick="selectPaymentMethod('cod')" style="display: flex; align-items: center; gap: 0.75rem; padding: 0.75rem; border: 2px solid var(--border); border-radius: var(--radius); margin-bottom: 0.75rem; cursor: pointer;">
+            <div class="payment-method" onclick="selectPaymentMethod('cod')" style="display: flex; align-items: center; gap: 0.75rem; padding: 0.75rem; border: 2px solid var(--primary); border-radius: var(--radius); margin-bottom: 0.75rem; cursor: pointer; background: rgba(59, 130, 246, 0.05);">
               <input type="radio" name="paymentMethod" value="cod" id="cod" checked>
               <div style="font-size: 1.5rem;">💰</div>
               <div>
                 <h4 style="margin: 0; font-size: 1rem;">Cash on Delivery</h4>
-                <p style="margin: 0; font-size: 0.875rem; color: var(--gray);">Pay when you receive</p>
+                <p style="margin: 0; font-size: 0.875rem; color: var(--gray);">Pay when you receive your order</p>
               </div>
             </div>
             
@@ -2108,15 +2115,9 @@
 
   <!-- Firebase SDK -->
   <script type="module">
-    // Continue with JavaScript from here...
-    // I'll provide the complete JavaScript in the next part due to length limits
-  </script>
-
-  <!-- COMPLETE JAVASCRIPT CODE - Part 2 -->
-  <script type="module">
     import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js';
     import { getFirestore, collection, addDoc, getDocs, query, where, orderBy, doc, updateDoc, serverTimestamp, arrayUnion } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js';
-    import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut as firebaseSignOut, sendPasswordResetEmail, onAuthStateChanged, updateProfile } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js';
+    import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut as firebaseSignOut, sendPasswordResetEmail, onAuthStateChanged, updateProfile, GoogleAuthProvider, signInWithPopup, signInWithRedirect, getRedirectResult } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js';
 
     // Firebase Configuration
     const firebaseConfig = {
@@ -2132,6 +2133,11 @@
     const app = initializeApp(firebaseConfig);
     const db = getFirestore(app);
     const auth = getAuth(app);
+
+    // ✅ GOOGLE AUTH PROVIDER
+    const googleProvider = new GoogleAuthProvider();
+    googleProvider.addScope('email');
+    googleProvider.addScope('profile');
 
     // ✅ ANDROID SPECIFIC FEATURES
     class AndroidOptimizer {
@@ -2328,6 +2334,61 @@
     window.openAndroidUPI = (upiUrl) => {
       androidOptimizer.openUPIApp(upiUrl);
     };
+
+    // ✅ GOOGLE SIGN-IN FUNCTIONS
+    window.signInWithGoogle = async () => {
+      try {
+        const result = await signInWithPopup(auth, googleProvider);
+        const credential = GoogleAuthProvider.credentialFromResult(result);
+        const user = result.user;
+        
+        showAndroidAlert('🎉 Google sign-in successful!', 'success');
+        
+        // Android Google sign-in notification
+        if (androidOptimizer.isAndroid) {
+          androidOptimizer.showAndroidNotification('Welcome!', `Hi ${user.displayName}, you're signed in with Google!`);
+        }
+        
+        closeModal('loginModal');
+        
+      } catch (error) {
+        console.error('Google sign-in error:', error);
+        
+        if (error.code === 'auth/account-exists-with-different-credential') {
+          showAndroidAlert('This email is already registered with a different method. Please use email/password login.', 'warning');
+        } else if (error.code === 'auth/popup-closed-by-user') {
+          showAndroidAlert('Sign-in cancelled', 'warning');
+        } else {
+          showAndroidAlert('Google sign-in failed. Please try again.', 'error');
+        }
+      }
+    };
+
+    // Alternative method for mobile devices (redirect instead of popup)
+    window.signInWithGoogleRedirect = async () => {
+      try {
+        await signInWithRedirect(auth, googleProvider);
+      } catch (error) {
+        console.error('Google redirect sign-in error:', error);
+        showAndroidAlert('Google sign-in failed. Please try again.', 'error');
+      }
+    };
+
+    // Handle redirect result on page load
+    async function handleGoogleRedirectResult() {
+      try {
+        const result = await getRedirectResult(auth);
+        if (result) {
+          const user = result.user;
+          showAndroidAlert(`Welcome ${user.displayName}! Google sign-in successful.`, 'success');
+        }
+      } catch (error) {
+        console.error('Google redirect result error:', error);
+        if (error.code === 'auth/account-exists-with-different-credential') {
+          showAndroidAlert('This email is already registered with a different method.', 'warning');
+        }
+      }
+    }
 
     // Enhanced alert for Android
     function showAndroidAlert(message, type = 'success') {
@@ -2644,7 +2705,7 @@
           console.error('Error updating expired payment:', error);
         }
 
-        // Show timeout message with manual verification option
+                // Show timeout message with manual verification option
         showAndroidAlert('Payment verification timeout. If you completed payment, please verify manually.', 'warning');
         
         this.cleanupPayment(transactionId);
@@ -2751,7 +2812,7 @@
           'https://images.unsplash.com/photo-1542291026-7eec264c27ff?w=400&h=300&fit=crop'
         ],
         image: 'https://images.unsplash.com/photo-1542291026-7eec264c27ff?w=400&h=300&fit=crop',
-                description: 'Professional running shoes with excellent comfort, grip, and durability.'
+        description: 'Professional running shoes with excellent comfort, grip, and durability.'
       }
     ];
 
@@ -4165,12 +4226,22 @@
       }
     };
 
-    // Authentication State Observer
-    onAuthStateChanged(auth, (user) => {
+    // Enhanced Authentication State Observer
+    onAuthStateChanged(auth, async (user) => {
       currentUser = user;
       console.log('🔐 Auth state changed:', user ? 'Logged in' : 'Logged out');
-      updateAuthUI();
+      
       if (user) {
+        // Check if this is a new Google user
+        if (user.providerData.some(provider => provider.providerId === 'google.com')) {
+          console.log('👤 Google user detected:', user.displayName);
+          
+          // Update profile with Google data if available
+          if (user.photoURL && user.displayName) {
+            updateProfileDisplay();
+          }
+        }
+        
         loadUserOrders();
         updateProfileStats();
         
@@ -4179,6 +4250,8 @@
           checkExistingPayments();
         }, 2000);
       }
+      
+      updateAuthUI();
     });
 
     // Enhanced status checking for existing payments
@@ -4207,6 +4280,35 @@
       }
     }
 
+    // Enhanced Profile Display for Google Users
+    function updateProfileDisplay() {
+      if (currentUser) {
+        const displayName = document.getElementById('displayName');
+        const profileAvatar = document.getElementById('profileAvatarMain');
+        const userAvatar = document.getElementById('userAvatar');
+        
+        // Use Google profile data if available
+        const name = currentUser.displayName || currentUser.email.split('@')[0];
+        const photoURL = currentUser.photoURL;
+        
+        if (displayName) displayName.textContent = name;
+        
+        // Update profile avatars with Google photo or fallback
+        const avatarURL = photoURL || `https://ui-avatars.com/api/?name=${encodeURIComponent(name)}&background=3b82f6&color=fff&size=100`;
+        
+        if (profileAvatar) profileAvatar.src = avatarURL;
+        if (userAvatar) userAvatar.src = avatarURL;
+        
+        // Add Google badge if signed in with Google
+        if (currentUser.providerData.some(provider => provider.providerId === 'google.com')) {
+          const profileTitle = document.querySelector('.profile-title');
+          if (profileTitle) {
+            profileTitle.innerHTML = '🌟 Google Account • Crodyto Customer';
+          }
+        }
+      }
+    }
+
     // Update Authentication UI
     function updateAuthUI() {
       const loginBtn = document.getElementById('loginBtn');
@@ -4217,7 +4319,10 @@
       if (currentUser) {
         loginBtn.style.display = 'none';
         userMenu.classList.remove('hidden');
-        userAvatar.src = currentUser.photoURL || `https://ui-avatars.com/api/?name=${encodeURIComponent(currentUser.displayName || currentUser.email)}&background=3b82f6&color=fff`;
+        
+        // Use Google photo if available
+        const photoURL = currentUser.photoURL || `https://ui-avatars.com/api/?name=${encodeURIComponent(currentUser.displayName || currentUser.email)}&background=3b82f6&color=fff`;
+        userAvatar.src = photoURL;
         userAvatar.onclick = () => showModal('profileModal');
         
         const profileName = document.getElementById('profileName');
@@ -4234,18 +4339,6 @@
           loginText.classList.remove('hidden');
         } else {
           loginText.classList.add('hidden');
-        }
-      }
-    }
-
-    function updateProfileDisplay() {
-      if (currentUser) {
-        const displayName = document.getElementById('displayName');
-        const profileAvatar = document.getElementById('profileAvatarMain');
-        
-        if (displayName) displayName.textContent = currentUser.displayName || currentUser.email.split('@')[0];
-        if (profileAvatar) {
-          profileAvatar.src = currentUser.photoURL || `https://ui-avatars.com/api/?name=${encodeURIComponent(currentUser.displayName || currentUser.email)}&background=3b82f6&color=fff&size=100`;
         }
       }
     }
@@ -4351,7 +4444,7 @@
       }
     });
 
-    window.switchTab = (tabName) => {
+        window.switchTab = (tabName) => {
       document.querySelectorAll('.profile-tab').forEach(tab => tab.classList.remove('active'));
       document.querySelector(`[onclick="switchTab('${tabName}')"]`).classList.add('active');
       
@@ -4580,18 +4673,26 @@
       showModal('checkoutModal');
     };
 
+    // ✅ ENHANCED PAYMENT METHOD SELECTION
     window.selectPaymentMethod = (method) => {
       document.getElementById(method).checked = true;
       
-      document.querySelectorAll('.payment-method').forEach(el => el.classList.remove('selected'));
-      event.currentTarget.classList.add('selected');
+      // Update visual selection
+      document.querySelectorAll('.payment-method').forEach(el => {
+        el.style.borderColor = 'var(--border)';
+        el.style.background = 'white';
+      });
+      
       event.currentTarget.style.borderColor = 'var(--primary)';
+      event.currentTarget.style.background = method === 'cod' ? 
+        'rgba(16, 185, 129, 0.05)' : 
+        'rgba(59, 130, 246, 0.05)';
       
       document.getElementById('upiForm').classList.toggle('show', method === 'upi');
       
       const button = document.getElementById('placeOrderBtn');
       const buttonTexts = {
-        'cod': '🛒 Place Order',
+        'cod': '💰 Place Order (Cash on Delivery)',
         'upi': '📱 Pay with UPI'
       };
       
@@ -4603,15 +4704,14 @@
       }
     };
 
-    // Place Order After Payment
-    async function placeOrderAfterPayment(paymentMethod) {
-      const formData = new FormData(document.getElementById('checkoutForm'));
+    // ✅ ENHANCED PLACE ORDER FUNCTION FOR COD
+    async function placeOrderDirectly(paymentMethod) {
       const orderData = {
         userId: currentUser.uid,
-        name: formData.get('checkoutName') || document.getElementById('checkoutName').value,
-        email: formData.get('checkoutEmail') || document.getElementById('checkoutEmail').value,
-        phone: formData.get('checkoutPhone') || document.getElementById('checkoutPhone').value,
-        address: formData.get('checkoutAddress') || document.getElementById('checkoutAddress').value,
+        name: document.getElementById('checkoutName').value,
+        email: document.getElementById('checkoutEmail').value,
+        phone: document.getElementById('checkoutPhone').value,
+        address: document.getElementById('checkoutAddress').value,
         paymentMethod: paymentMethod,
         paymentStatus: paymentMethod === 'cod' ? 'pending' : 'completed',
         items: cart,
@@ -4628,6 +4728,7 @@
       try {
         const docRef = await addDoc(collection(db, 'orders'), orderData);
         
+        // Clear cart and update UI
         cart = [];
         saveCart();
         updateCartUI();
@@ -4636,13 +4737,18 @@
         showOrderPlacedNotification(docRef.id);
         
         const paymentMessages = {
-          'cod': 'Order placed successfully! Pay when you receive.',
-          'upi': 'Order placed successfully! UPI payment completed.'
+          'cod': '🎉 Order placed successfully! Pay when you receive your order.',
+          'upi': '🎉 Order placed successfully! UPI payment completed.'
         };
         
         setTimeout(() => {
           showAndroidAlert(paymentMessages[paymentMethod], 'success');
         }, 1000);
+        
+        // Android order confirmation
+        if (androidOptimizer.isAndroid) {
+          androidOptimizer.showAndroidNotification('Order Confirmed!', `Order #${docRef.id.slice(-8).toUpperCase()} placed successfully.`);
+        }
         
         updateProfileStats();
         
@@ -4652,9 +4758,6 @@
       } finally {
         button.disabled = false;
         button.innerHTML = originalText;
-        button.style.display = 'block';
-        
-        document.getElementById('processing-message')?.remove();
       }
     }
 
@@ -4698,13 +4801,19 @@
       }
     }
 
-    // Enhanced checkout form handler with UPI Payment System
+    // ✅ ENHANCED CHECKOUT FORM HANDLER WITH COD SUPPORT
     document.getElementById('checkoutForm').addEventListener('submit', async (e) => {
       e.preventDefault();
       
       if (!currentUser) return;
       
       const paymentMethod = document.querySelector('input[name="paymentMethod"]:checked').value;
+      
+      if (paymentMethod === 'cod') {
+        // Direct order placement for Cash on Delivery
+        await placeOrderDirectly('cod');
+        return;
+      }
       
       if (paymentMethod === 'upi') {
         const total = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
@@ -4738,9 +4847,6 @@
         
         return;
       }
-      
-      // For COD - direct order placement
-      placeOrderAfterPayment('cod');
     });
 
     // Search Functionality
@@ -4804,6 +4910,9 @@
     // Initialize App
     document.addEventListener('DOMContentLoaded', () => {
       console.log('🚀 Crodyto Android-Optimized app initializing...');
+      
+      // Handle Google redirect result
+      handleGoogleRedirectResult();
       
       createBannerSlider();
       
